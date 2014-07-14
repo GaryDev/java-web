@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.kratos.kracart.model.LanguageModel">
+	<resultMap type="Language" id="rmLangList">
+		<id property="id" column="languages_id" />
+		<result property="code" column="code" />
+		<result property="name" column="name" />
+		<result property="locale" column="locale" />
+		<result property="charset" column="charset" />
+		<result property="dateFormatShort" column="date_format_short" />
+		<result property="dateFormatLong" column="date_format_long" />
+		<result property="timeFormat" column="time_format" />
+		<result property="textDirection" column="text_direction" />
+		<result property="numericSepratorDecimal" column="numeric_separator_decimal" />
+		<result property="numericSepratorThousands" column="numeric_separator_thousands" />
+	</resultMap>
+	
+	<select id="getLanguages" resultMap="rmLangList">
+		select * from toc_languages order by sort_order, name
+	</select>
+
+</mapper>

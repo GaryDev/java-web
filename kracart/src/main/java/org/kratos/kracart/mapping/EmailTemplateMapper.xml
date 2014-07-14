@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.kratos.kracart.model.EmailTemplateModel">
+	<resultMap type="EmailTemplateDescription" id="rmEmailTemplate">
+		<result property="title" column="email_title" />
+		<result property="content" column="email_content" />
+	</resultMap>
+	
+	<select id="getEmailTemplateByName" parameterType="map" resultMap="rmEmailTemplate">
+		select etd.email_title, etd.email_content
+		  from toc_email_templates_description etd
+		 inner join toc_email_templates et on et.email_templates_id = etd.email_templates_id
+		 inner join toc_languages l on l.languages_id = etd.language_id
+		 where et.email_templates_name = #{name}
+		   and et.email_templates_status > 0
+		   and l.code = #{code}
+	</select>
+
+</mapper>

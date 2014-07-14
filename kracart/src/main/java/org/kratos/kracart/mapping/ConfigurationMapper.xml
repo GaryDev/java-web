@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.kratos.kracart.model.ConfigurationModel">
+	
+	<resultMap type="Configuration" id="rmConfig">
+		<id property="id" column="configuration_id" />
+		<result property="title" column="configuration_title" />
+		<result property="key" column="configuration_key" />
+		<result property="value" column="configuration_value" />
+	</resultMap>
+	
+	<select id="getConfigs" resultMap="rmConfig">
+		select configuration_id,
+			   configuration_title,
+			   configuration_key,
+			   configuration_value 
+		  from toc_configuration
+	</select>
+
+</mapper>
