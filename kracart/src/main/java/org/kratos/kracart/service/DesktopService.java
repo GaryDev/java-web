@@ -11,5 +11,7 @@ public interface DesktopService {
 	public void loadDesktopConstants(Map<String, Object> data);
 	public void loadLanguages(Map<String, Object> data, List<Language> langs);
 	public void loadLanguageDefinition(Map<String, Object> data, ResourceBundle desktopBundle);
-	
+	public void initialize(String userName);
+	public String getLaunchers();
+	public String getStyles();
 }

@@ -46,6 +46,7 @@ public class AdminServiceImpl implements AdminService {
 	public boolean resetPassword(String email, String ip, Locale locale) {
 		String password = CommonUtils.createRandomString(8);
 		String passwordEncrypt = CommonUtils.encryptString(password);
+		updatePassword(email, passwordEncrypt);
 		Map<String, Object> info = new HashMap<String, Object>();
 		info.put("ip", ip);
 		info.put("password", password);
@@ -53,6 +54,13 @@ public class AdminServiceImpl implements AdminService {
 		template.createTemplate(TplAdminPasswordForgotten.TPL_NAME, locale);
 		template.setData(info);
 		return template.sendEmail();
+	}
+	
+	private void updatePassword(String email, String newPassword) {
+		Administrator admin = new Administrator();
+		admin.setPassword(newPassword);
+		admin.setEmail(email);
+		administratorModel.updatePassword(admin);
 	}
 
 }

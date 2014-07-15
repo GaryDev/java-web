@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
@@ -53,12 +52,14 @@ public class IndexController extends CommonController {
 	
 	@RequestMapping("/admin/index/desktop")
 	public ModelAndView desktop() {
+		String userName = "admin";	// TODO: From session
+		desktopService.initialize(userName);
 		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("username", "admin");
-		data.put("modules", "0");
-		data.put("launchers", "0");
-		data.put("styles", "0");
-		data.put("output", "");
+		data.put("username", userName);
+		data.put("modules", "[]");	// TODO: Get modules
+		data.put("launchers", desktopService.getLaunchers());
+		data.put("styles", desktopService.getStyles());
+		data.put("output", "{}");	// TODO: Get Output modules
 		return new ModelAndView("admin/desktop", data);
 	}
 	

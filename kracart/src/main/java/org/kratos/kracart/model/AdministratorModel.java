@@ -6,5 +6,6 @@ public interface AdministratorModel {
 	
 	public void updatePassword(Administrator admin);
 	public Administrator getAdministratorByMail(String email);
+	public String getAdminSettingByName(String userName);
 
 }

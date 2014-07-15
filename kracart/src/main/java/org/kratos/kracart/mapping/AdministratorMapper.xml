@@ -7,7 +7,6 @@
 	<resultMap type="Administrator" id="rmAdmin">
 		<id property="id" column="id" />
 		<result property="name" column="user_name" />
-		<result property="settings" column="user_settings" />
 		<result property="email" column="email_address" />
 	</resultMap>
 	
@@ -18,9 +17,15 @@
 	</update>
 	
 	<select id="getAdministratorByMail" parameterType="string" resultMap="rmAdmin">
-		select id, user_name, user_settings, email_address
+		select id, user_name, email_address
 		  from toc_administrators
 		 where email_address = #{email}
+	</select>
+	
+	<select id="getAdminSettingByName" parameterType="string" resultMap="string">
+		select user_setting
+		  from toc_administrators
+		 where user_name = #{name}
 	</select>
 
 </mapper>
