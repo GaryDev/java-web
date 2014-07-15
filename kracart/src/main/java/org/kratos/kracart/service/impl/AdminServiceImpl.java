@@ -30,7 +30,7 @@ public class AdminServiceImpl implements AdminService {
 
 	@Override
 	public boolean IsLogon() {
-		return false;
+		return true;
 	}
 
 	@Override
@@ -44,9 +44,11 @@ public class AdminServiceImpl implements AdminService {
 
 	@Override
 	public boolean resetPassword(String email, String ip, Locale locale) {
+		String password = CommonUtils.createRandomString(8);
+		String passwordEncrypt = CommonUtils.encryptString(password);
 		Map<String, Object> info = new HashMap<String, Object>();
 		info.put("ip", ip);
-		info.put("password", CommonUtils.encrptyPassword(""));
+		info.put("password", password);
 		info.put("mail", email);
 		template.createTemplate(TplAdminPasswordForgotten.TPL_NAME, locale);
 		template.setData(info);

@@ -14,7 +14,12 @@
     <meta http-equiv="cache-control" content="no-cache" />
     <meta http-equiv="expires" content="-1" />
 	<link rel="stylesheet" type="text/css" href="${ctx}/templates/base/web/javascript/extjs/resources/css/ext-all.css" />
-	<script src="${ctx}/templates/base/web/javascript/extjs/ext-all-debug.js"></script> 
+	<script src="${ctx}/templates/base/web/javascript/extjs/ext-all-debug.js"></script>
+	<style type="text/css">
+	<c:forEach items="${langs}" var="l">
+		<c:out value=".icon-${l.countryISO}-win {background-image: url(${ctx}/assets/images/worldflags/${l.countryISO}.png !important;}" escapeXml="false"></c:out>
+	</c:forEach>
+    </style> 
     <decorator:head />
   </head>
 

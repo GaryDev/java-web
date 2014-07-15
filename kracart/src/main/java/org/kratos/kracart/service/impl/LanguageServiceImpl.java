@@ -44,7 +44,7 @@ public class LanguageServiceImpl implements LanguageService {
 			languages = new HashMap<String, Language>();
 			List<Language> langs = languageModel.getLanguages();
 			for (Language language : langs) {
-				language.setCountryISO(language.getCode().substring(3));
+				language.setCountryISO(language.getCode().substring(3).toLowerCase());
 				languages.put(language.getCode(), language);
 			}
 		}
