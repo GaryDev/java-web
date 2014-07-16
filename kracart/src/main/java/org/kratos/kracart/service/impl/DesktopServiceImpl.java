@@ -7,15 +7,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import org.kratos.kracart.core.bean.DesktopLauncher;
+import org.kratos.kracart.core.bean.DesktopSetting;
+import org.kratos.kracart.core.bean.DesktopStyle;
+import org.kratos.kracart.core.bean.DesktopWallPaper;
 import org.kratos.kracart.core.config.DesktopConstant;
 import org.kratos.kracart.entity.Language;
 import org.kratos.kracart.model.AdministratorModel;
 import org.kratos.kracart.service.DesktopService;
+import org.kratos.kracart.utility.CommonUtils;
 import org.kratos.kracart.utility.JsonUtils;
 import org.kratos.kracart.utility.PHPSerializer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 @Service("desktopService")
 public class DesktopServiceImpl implements DesktopService {
@@ -28,7 +32,7 @@ public class DesktopServiceImpl implements DesktopService {
 		return userName;
 	}
 	
-	private Map<String, String> settings;
+	private DesktopSetting settings;
 
 	public void loadDesktopConstants(Map<String, Object> data) {
 		data.put("steps", String.valueOf(DesktopConstant.EXT_GRID_STEPS));
@@ -57,7 +61,7 @@ public class DesktopServiceImpl implements DesktopService {
 		data.put("jsonLangDef", JsonUtils.convertToJsonString(prop));
 	}
 	
-	@SuppressWarnings({"unchecked", "rawtypes"})
+	@SuppressWarnings({"rawtypes"})
 	public void initialize(String userName) {
 		this.userName = userName;
 		String userSetting = administratorModel.getAdminSettingByName(userName);
@@ -65,65 +69,94 @@ public class DesktopServiceImpl implements DesktopService {
 			Map settings = (Map) PHPSerializer.unserialize(userSetting.getBytes(), Map.class);
 			if(settings == null || settings.size() == 0 || !settings.containsKey("desktop")) {
 				this.settings = getDefaultSettings();
-				// TODO: Save Setting
+				saveDesktopSetting();
 			} else {
-				this.settings = (Map<String, String>) settings.get("desktop");
+				this.settings = getDesktopSetting(settings.get("desktop"));
 			}
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	private Map<String, String> getDefaultSettings() {
-		Map<String, String> defaultSetting = new HashMap<String, String>();
-		defaultSetting.put("theme", "vistablue");
-		defaultSetting.put("transparency", "100");
-		defaultSetting.put("backgroundcolor", "3A6EA5");
-		defaultSetting.put("fontcolor", "FFFFFF");
-		defaultSetting.put("wallpaper", "blank");
-		defaultSetting.put("wallpaperposition", "tile");
+	private DesktopSetting getDefaultSettings() {
+		DesktopSetting defaultSetting = new DesktopSetting();
+		
+		DesktopStyle style = new DesktopStyle();
+		style.setTheme("vistablue");
+		style.setTransparency("100");
+		style.setBackgroundcolor("3A6EA5");
+		style.setFontcolor("FFFFFF");
+		style.setDeskWallPaper(new DesktopWallPaper("blank"));
+		style.setWallpaperposition("tile");
+		defaultSetting.setStyle(style);
 
-		defaultSetting.put("autorun", "[\"dashboard-win\"]");
-		defaultSetting.put("contextmenu", "[]");
-		defaultSetting.put("quickstart", "[\"articles_categories-win\",\"articles-win\",\"faqs-win\",\"slide_images-win\",\"products-win\",\"customers-win\",\"orders-win\", \"invoices-win\", \"coupons-win\",\"gift_certificates-win\",\"dashboard-win\"]");
-		defaultSetting.put("shortcut", "[\"articles_categories-win\",\"articles-win\",\"faqs-win\",\"slide_images-win\",\"products-win\",\"customers-win\",\"orders-win\", \"invoices-win\", \"coupons-win\",\"gift_certificates-win\",\"dashboard-win\"]");
-		defaultSetting.put("wizard_complete", "FALSE");
-
-		defaultSetting.put("dashboards", "overview:0,new_orders:1,new_customers:2,new_reviews:0,orders_statistics:1,last_visits:2");
-
-		defaultSetting.put("livefeed", "0");
+		DesktopLauncher launcher = new DesktopLauncher();
+		launcher.setAutorun("[\"dashboard-win\"]");
+		launcher.setContextmenu("[]");
+		launcher.setQuickstart("[\"articles_categories-win\",\"articles-win\",\"faqs-win\",\"slide_images-win\",\"products-win\",\"customers-win\",\"orders-win\", \"invoices-win\", \"coupons-win\",\"gift_certificates-win\",\"dashboard-win\"]");
+		launcher.setShortcut("[\"articles_categories-win\",\"articles-win\",\"faqs-win\",\"slide_images-win\",\"products-win\",\"customers-win\",\"orders-win\", \"invoices-win\", \"coupons-win\",\"gift_certificates-win\",\"dashboard-win\"]");
+		defaultSetting.setLauncher(launcher);
+		
+		defaultSetting.setWizard_complete(false);
+		defaultSetting.setDashboards("overview:0,new_orders:1,new_customers:2,new_reviews:0,orders_statistics:1,last_visits:2");
+		defaultSetting.setLivefeed(0);
+		
 		return defaultSetting;
+	}
+	
+	private void saveDesktopSetting() {
+		Map<String, Object> setting = new HashMap<String, Object>();
+		setting = CommonUtils.beanToMap(setting, settings);
+		Map<String, Object> desktop = new HashMap<String, Object>();
+		desktop.put("desktop", setting);
+		String s = new String(PHPSerializer.serialize(desktop));
+		Map<String, String> param = new HashMap<String, String>();
+		param.put("name", userName);
+		param.put("setting", s);
+		administratorModel.saveAdminSetting(param);
+	}
+	
+	@SuppressWarnings("unchecked")
+	private DesktopSetting getDesktopSetting(Object desktop) {
+		Map<String, Object> map = (Map<String, Object>) desktop;
+		DesktopSetting setting = new DesktopSetting();
+		if(map != null) {
+			DesktopStyle style = new DesktopStyle();
+			CommonUtils.mapToBean(map, style);
+			setting.setStyle(style);
+			
+			DesktopLauncher launcher = new DesktopLauncher();
+			CommonUtils.mapToBean(map, launcher);
+			setting.setLauncher(launcher);
+			
+			CommonUtils.mapToBean(map, setting);
+		}
+		return setting;
 	}
 
 	@Override
 	public String getLaunchers() {
-		String defaultValue = "[]";
-		Map<String, String> launcher = new HashMap<String, String>();
-		launcher.put("autorun", settings.containsKey("autorun")
-						&& StringUtils.hasLength(settings.get("autorun")) ? settings.get("autorun") : defaultValue);
-		launcher.put("contextmenu", settings.containsKey("contextmenu")
-				&& StringUtils.hasLength(settings.get("contextmenu")) ? settings.get("contextmenu") : defaultValue);
-		launcher.put("quickstart", settings.containsKey("quickstart")
-				&& StringUtils.hasLength(settings.get("quickstart")) ? settings.get("quickstart") : defaultValue);
-		launcher.put("shortcut", settings.containsKey("shortcut")
-				&& StringUtils.hasLength(settings.get("shortcut")) ? settings.get("shortcut") : defaultValue);
+		DesktopLauncher launcher = settings.getLauncher();
+		if(launcher == null) {
+			launcher = new DesktopLauncher();
+		}
 		return JsonUtils.convertToJsonString(launcher);
 	}
 
 	@Override
 	public String getStyles() {
-		Map<String, Object> styles = new HashMap<String, Object>();
-		styles.put("backgroundcolor", settings.containsKey("backgroundcolor")
-				&& StringUtils.hasLength(settings.get("backgroundcolor")) ? settings.get("backgroundcolor") : "#3A6EA5");
-		styles.put("fontcolor", settings.containsKey("fontcolor")
-				&& StringUtils.hasLength(settings.get("fontcolor")) ? settings.get("fontcolor") : "FFFFFF");
-		styles.put("transparency", settings.containsKey("transparency")
-				&& StringUtils.hasLength(settings.get("transparency")) ? settings.get("transparency") : "100");
-		styles.put("wallpaperposition", settings.containsKey("wallpaperposition")
-				&& StringUtils.hasLength(settings.get("wallpaperposition")) ? settings.get("wallpaperposition") : "tile");
-		styles.put("theme", "");
-		styles.put("wallpaper", "");	// TODO: Get WallPapers
+		DesktopStyle styles = settings.getStyle();
+		if(styles == null) {
+			styles = new DesktopStyle();
+		}
+		styles.setDeskWallPaper(getWallPaper());
 		return JsonUtils.convertToJsonString(styles);
+	}
+	
+	private DesktopWallPaper getWallPaper() {
+		DesktopWallPaper wallpaper = new DesktopWallPaper();
+		
+		return wallpaper;
 	}
 
 }

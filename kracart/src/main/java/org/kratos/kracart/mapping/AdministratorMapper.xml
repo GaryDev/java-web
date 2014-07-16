@@ -22,10 +22,16 @@
 		 where email_address = #{email}
 	</select>
 	
-	<select id="getAdminSettingByName" parameterType="string" resultMap="string">
-		select user_setting
+	<select id="getAdminSettingByName" parameterType="string" resultType="string">
+		select user_settings
 		  from toc_administrators
 		 where user_name = #{name}
 	</select>
+	
+	<update id="saveAdminSetting" parameterType="map">
+		update toc_administrators
+		   set user_settings = #{setting}
+		 where user_name = #{name}
+	</update>
 
 </mapper>

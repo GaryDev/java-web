@@ -659,6 +659,9 @@ public class PHPSerializer {
 
 	public static Object unserialize(byte[] ss, Class cls, String charset)
 			throws IllegalAccessException {
+		if(ss == null || ss.length < 1) {
+			return null;
+		}
 		int hv = 1;
 		ByteArrayInputStream stream = new ByteArrayInputStream(ss);
 		Object result = unserialize(stream, new HashMap(), hv, new HashMap(),
@@ -756,12 +759,12 @@ public class PHPSerializer {
 		String i = readNumber(stream);
 
 		try {
-			return new Byte(i);
+			return new Integer(i);
 		} catch (Exception e1) {
 			try {
 				return new Short(i);
 			} catch (Exception e2) {
-				return new Integer(i);
+				return new Byte(i);
 			}
 		}
 	}

@@ -1,5 +1,10 @@
 package org.kratos.kracart.utility;
 
+import java.beans.BeanInfo;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Method;
+import java.util.Map;
 import java.util.Random;
 
 import org.springframework.util.DigestUtils;
@@ -31,6 +36,48 @@ public abstract class CommonUtils {
 	private static String md5Encrypt(String plain) {
 		return DigestUtils.md5DigestAsHex(plain.getBytes());
 		
+	}
+	
+	public static void mapToBean(Map<String, Object> map, Object target) {
+		try {  
+            BeanInfo beanInfo = Introspector.getBeanInfo(target.getClass());  
+            PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();  
+            for (PropertyDescriptor property : propertyDescriptors) {  
+                String key = property.getName();  
+                if (map.containsKey(key)) {  
+                    Object value = map.get(key);  
+                    Method setter = property.getWriteMethod();  
+                    setter.invoke(target, value);
+                }  
+            }  
+        } catch (Exception e) {  
+        } 
+	}
+	
+	public static Map<String, Object> beanToMap(Map<String, Object> map, Object source) {
+		if(source == null || map == null) {
+			return null;
+		}
+        try {  
+            BeanInfo beanInfo = Introspector.getBeanInfo(source.getClass());  
+            PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();  
+            for (PropertyDescriptor property : propertyDescriptors) {  
+                String key = property.getName();  
+                if (!key.equals("class")) {  
+                    Method getter = property.getReadMethod();  
+                    Object value = getter.invoke(source);
+                    if(value != null) {
+	                    if(value instanceof String || value instanceof Integer || value instanceof Boolean) {
+	                    	map.put(key, value);  
+	                    } else {
+	                    	beanToMap(map, value);
+	                    }
+                    }
+                }  
+            }  
+        } catch (Exception e) {  
+        }  
+        return map;
 	}
 	
 }
