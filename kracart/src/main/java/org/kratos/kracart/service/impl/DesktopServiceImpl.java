@@ -1,5 +1,6 @@
 package org.kratos.kracart.service.impl;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -11,7 +12,10 @@ import org.kratos.kracart.core.bean.DesktopLauncher;
 import org.kratos.kracart.core.bean.DesktopSetting;
 import org.kratos.kracart.core.bean.DesktopStyle;
 import org.kratos.kracart.core.bean.DesktopWallPaper;
+import org.kratos.kracart.core.bean.DesktopWallPapers;
 import org.kratos.kracart.core.config.DesktopConstant;
+import org.kratos.kracart.core.xml.XMLParser;
+import org.kratos.kracart.entity.Administrator;
 import org.kratos.kracart.entity.Language;
 import org.kratos.kracart.model.AdministratorModel;
 import org.kratos.kracart.service.DesktopService;
@@ -20,17 +24,17 @@ import org.kratos.kracart.utility.JsonUtils;
 import org.kratos.kracart.utility.PHPSerializer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 @Service("desktopService")
+@Transactional
 public class DesktopServiceImpl implements DesktopService {
 
 	@Autowired
 	private AdministratorModel administratorModel;
 	
-	private String userName;
-	public String getUserName() {
-		return userName;
-	}
+	private Administrator admin;
 	
 	private DesktopSetting settings;
 
@@ -62,9 +66,9 @@ public class DesktopServiceImpl implements DesktopService {
 	}
 	
 	@SuppressWarnings({"rawtypes"})
-	public void initialize(String userName) {
-		this.userName = userName;
-		String userSetting = administratorModel.getAdminSettingByName(userName);
+	public void initialize(Administrator user) {
+		admin = user;
+		String userSetting = administratorModel.getAdminSettingByName(admin.getName());
 		try {
 			Map settings = (Map) PHPSerializer.unserialize(userSetting.getBytes(), Map.class);
 			if(settings == null || settings.size() == 0 || !settings.containsKey("desktop")) {
@@ -111,7 +115,7 @@ public class DesktopServiceImpl implements DesktopService {
 		desktop.put("desktop", setting);
 		String s = new String(PHPSerializer.serialize(desktop));
 		Map<String, String> param = new HashMap<String, String>();
-		param.put("name", userName);
+		param.put("name", admin.getName());
 		param.put("setting", s);
 		administratorModel.saveAdminSetting(param);
 	}
@@ -149,14 +153,34 @@ public class DesktopServiceImpl implements DesktopService {
 		if(styles == null) {
 			styles = new DesktopStyle();
 		}
-		styles.setDeskWallPaper(getWallPaper());
+		String code = StringUtils.hasLength(styles.getWallpaper()) ? styles.getWallpaper() : "blank";
+		styles.setDeskWallPaper(getWallPaper(code));
 		return JsonUtils.convertToJsonString(styles);
 	}
 	
-	private DesktopWallPaper getWallPaper() {
-		DesktopWallPaper wallpaper = new DesktopWallPaper();
-		
-		return wallpaper;
+	private DesktopWallPaper getWallPaper(String code) {
+		Map<String, DesktopWallPaper> wallpapers = getWallPapers();
+		if(!wallpapers.containsKey(code)) {
+			return null;
+		}
+		return getWallPapers().get(code);
+	}
+	
+	private Map<String, DesktopWallPaper> getWallPapers() {
+		Map<String, DesktopWallPaper> wallpapers = new HashMap<String, DesktopWallPaper>();
+		URL path = this.getClass().getClassLoader().getResource("wallpapers.xml");
+		try {
+			XMLParser parser = new XMLParser(path.getPath());
+			DesktopWallPapers desktopWallPapers = parser.unmarshall(DesktopWallPapers.class);
+			if(desktopWallPapers != null) {
+				List<DesktopWallPaper> wallpaperList = desktopWallPapers.getWallpaper();
+				for (DesktopWallPaper wallpaper : wallpaperList) {
+					wallpapers.put(wallpaper.getCode(), wallpaper);
+				}
+			}
+		} catch (Exception e) {
+		}
+		return wallpapers;
 	}
 
 }

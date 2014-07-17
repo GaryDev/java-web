@@ -3,7 +3,11 @@ package org.kratos.kracart.utility;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.io.File;
 import java.lang.reflect.Method;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -78,6 +82,28 @@ public abstract class CommonUtils {
         } catch (Exception e) {  
         }  
         return map;
+	}
+	
+	public static List<String> getClassName(String packageName, URL root) {
+		String packagePath = packageName.replaceAll("\\.", "\\\\");
+		String filePath = root.getPath() + packagePath;
+		return getClassNameList(filePath, null);
+	}
+	
+	private static List<String> getClassNameList(String filePath, List<String> className) {
+		List<String> classNameList = new ArrayList<String>();
+		File file = new File(filePath);
+		File[] files = file.listFiles();
+		for (File f : files) {
+			if(f.isDirectory()) {
+				classNameList.addAll(getClassNameList(f.getPath(), classNameList));
+			} else {
+				String path = f.getPath();
+				String name = path.substring(path.indexOf("\\classes") + 9, path.lastIndexOf("."));
+				classNameList.add(name.replaceAll("\\\\", "\\."));
+			}
+		}
+		return classNameList;
 	}
 	
 }

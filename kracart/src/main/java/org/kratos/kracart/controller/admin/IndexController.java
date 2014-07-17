@@ -10,7 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.kratos.kracart.controller.CommonController;
 import org.kratos.kracart.core.config.ConfigConstant;
+import org.kratos.kracart.entity.Administrator;
 import org.kratos.kracart.entity.Language;
+import org.kratos.kracart.service.AdminAccessService;
 import org.kratos.kracart.service.AdminService;
 import org.kratos.kracart.service.ConfigurationService;
 import org.kratos.kracart.service.DesktopService;
@@ -26,6 +28,8 @@ public class IndexController extends CommonController {
 	
 	@Autowired
 	private AdminService adminService;
+	@Autowired
+	private AdminAccessService adminAccessService;
 	@Autowired
 	private DesktopService desktopService;
 	@Autowired
@@ -52,14 +56,19 @@ public class IndexController extends CommonController {
 	
 	@RequestMapping("/admin/index/desktop")
 	public ModelAndView desktop() {
-		String userName = "admin";	// TODO: From session
-		desktopService.initialize(userName);
+		Administrator admin = new Administrator();
+		admin.setName("admin");	// TODO: From session
+		
 		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("username", userName);
-		data.put("modules", "[]");	// TODO: Get modules
+		
+		desktopService.initialize(admin);
+		data.put("username", admin.getName());
 		data.put("launchers", desktopService.getLaunchers());
 		data.put("styles", desktopService.getStyles());
-		data.put("output", "{}");	// TODO: Get Output modules
+		
+		adminAccessService.initialize(admin.getName());
+		data.put("modules", adminAccessService.getModules());
+		data.put("output", adminAccessService.getOutputModule());
 		return new ModelAndView("admin/desktop", data);
 	}
 	

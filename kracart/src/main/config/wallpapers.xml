@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/2002/xmlspec/dtd/2.10/xmlspec.dtd">
+<wallpapers>
+  <wallpaper>
+    <code><![CDATA[blank]]></code>
+    <name><![CDATA[blank]]></name>
+    <author><![CDATA[]]></author>
+    <url><![CDATA[]]></url>
+    <thumbnail><![CDATA[templates/base/web/javascript/desktop/wallpapers/thumbnails/blank.gif]]></thumbnail>
+    <file><![CDATA[templates/base/web/javascript/desktop/wallpapers/blank.gif]]></file>
+  </wallpaper>
+  <wallpaper>
+    <code><![CDATA[blue-swirl]]></code>
+    <name><![CDATA[blue swirl]]></name>
+    <author><![CDATA[]]></author>
+    <url><![CDATA[]]></url>
+    <thumbnail><![CDATA[templates/base/web/javascript/desktop/wallpapers/thumbnails/blue-swirl.jpg]]></thumbnail>
+    <file><![CDATA[templates/base/web/javascript/desktop/wallpapers/blue-swirl.jpg]]></file>
+  </wallpaper>
+  <wallpaper>
+    <code><![CDATA[blue-psychedelic]]></code>
+    <name><![CDATA[blue psychedelic]]></name>
+    <author><![CDATA[]]></author>
+    <url><![CDATA[]]></url>
+    <thumbnail><![CDATA[templates/base/web/javascript/desktop/wallpapers/thumbnails/blue-psychedelic.jpg]]></thumbnail>
+    <file><![CDATA[templates/base/web/javascript/desktop/wallpapers/blue-psychedelic.jpg]]></file>
+  </wallpaper>
+  <wallpaper>
+    <code><![CDATA[desk]]></code>
+    <name><![CDATA[desk]]></name>
+    <author><![CDATA[]]></author>
+    <url><![CDATA[]]></url>
+    <thumbnail><![CDATA[templates/base/web/javascript/desktop/wallpapers/thumbnails/desk.jpg]]></thumbnail>
+    <file><![CDATA[templates/base/web/javascript/desktop/wallpapers/desk.jpg]]></file>
+  </wallpaper>
+  <wallpaper>
+    <code><![CDATA[desktop]]></code>
+    <name><![CDATA[desktop]]></name>
+    <author><![CDATA[]]></author>
+    <url><![CDATA[]]></url>
+    <thumbnail><![CDATA[templates/base/web/javascript/desktop/wallpapers/thumbnails/desktop.jpg]]></thumbnail>
+    <file><![CDATA[templates/base/web/javascript/desktop/wallpapers/desktop.jpg]]></file>
+  </wallpaper>
+</wallpapers>

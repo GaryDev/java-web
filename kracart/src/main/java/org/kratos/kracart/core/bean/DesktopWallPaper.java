@@ -1,10 +1,19 @@
 package org.kratos.kracart.core.bean;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+
+@XmlAccessorType(XmlAccessType.NONE)
 public class DesktopWallPaper {
 
+	@XmlElement
 	private String name;
+	@XmlElement
 	private String code;
+	@XmlElement(name="file")
 	private String path;
+	@XmlElement
 	private String thumbnail;
 	
 	public DesktopWallPaper() {

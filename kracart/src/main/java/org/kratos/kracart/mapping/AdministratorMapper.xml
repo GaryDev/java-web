@@ -9,6 +9,13 @@
 		<result property="name" column="user_name" />
 		<result property="email" column="email_address" />
 	</resultMap>
+	<resultMap type="Administrator" id="rmAdminLevels">
+		<id property="id" column="id" />
+		<result property="name" column="user_name" />
+		<collection property="access" ofType="AdministratorAccess" column="administrators_id">
+			<result property="module" column="module" />
+		</collection>
+	</resultMap>
 	
 	<update id="updatePassword" parameterType="Administrator">
 		update toc_administrators
@@ -26,6 +33,13 @@
 		select user_settings
 		  from toc_administrators
 		 where user_name = #{name}
+	</select>
+	
+	<select id="getAdminLevels" parameterType="string" resultMap="rmAdminLevels">
+		select a.id, a.user_name as name, ac.module
+		  from toc_administrators a
+		 inner join toc_administrators_access ac on ac.administrators_id = a.id
+		 where a.user_name = #{name}
 	</select>
 	
 	<update id="saveAdminSetting" parameterType="map">

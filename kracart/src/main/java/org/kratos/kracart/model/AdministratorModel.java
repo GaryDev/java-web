@@ -10,5 +10,6 @@ public interface AdministratorModel {
 	public Administrator getAdministratorByMail(String email);
 	public String getAdminSettingByName(String userName);
 	public void saveAdminSetting(Map<String, String> param);
+	public Administrator getAdminLevels(String userName);
 
 }

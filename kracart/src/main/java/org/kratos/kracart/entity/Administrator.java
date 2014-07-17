@@ -1,6 +1,7 @@
 package org.kratos.kracart.entity;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class Administrator implements Serializable {
 
@@ -11,6 +12,7 @@ public class Administrator implements Serializable {
 	private String password;
 	private String settings;
 	private String email;
+	private List<AdministratorAccess> access;
 	
 	public int getId() {
 		return id;
@@ -41,6 +43,12 @@ public class Administrator implements Serializable {
 	}
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	public List<AdministratorAccess> getAccess() {
+		return access;
+	}
+	public void setAccess(List<AdministratorAccess> access) {
+		this.access = access;
 	}
 
 }
