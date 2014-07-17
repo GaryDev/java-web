@@ -19,14 +19,16 @@ public abstract class JsonUtils {
 		}
 		ObjectMapper mapper = new ObjectMapper();
 		String result = defaultValue;
-		try {
-			result = mapper.writeValueAsString(target);
-		} catch (JsonGenerationException e) {
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+		if(target != null) {
+			try {
+				result = mapper.writeValueAsString(target);
+			} catch (JsonGenerationException e) {
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		return result;
 	}

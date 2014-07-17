@@ -12,8 +12,17 @@ import java.util.Map;
 import java.util.Random;
 
 import org.springframework.util.DigestUtils;
+import org.springframework.util.StringUtils;
 
 public abstract class CommonUtils {
+	
+	public static void main(String[] args) {
+		List<String> list = new ArrayList<String>();
+		list.add("a");
+		list.add("b");
+		list.add("c");
+		System.out.println(listToString(list, ","));
+	}
 
 	public static String encryptString(String plain) {
 		String password = "";
@@ -35,6 +44,42 @@ public abstract class CommonUtils {
 			randStr += pattern.substring(pos, pos + 1);
 		}
 		return randStr;
+	}
+	
+	public static String ucFirst(String str) {
+		if(StringUtils.hasLength(str)) {
+			String first = str.substring(0, 1);
+			return str.replace(first, first.toUpperCase());
+		}
+		return str;
+	}
+	
+	public static String ucWord(String str) {
+		if(StringUtils.hasLength(str)) {
+			if(str.indexOf("_") != -1) {
+				String[] words = str.split("_");
+				str = ucFirst(words[0]) + ucFirst(words[1]); 
+			} else {
+				str = ucFirst(str);
+			}
+		}
+		return str;
+	}
+	
+	public static String listToString(List<String> list, String delimter) {
+		if(list == null || list.size() == 0) {
+			return "";
+		}
+		if(!StringUtils.hasLength(delimter)) {
+			delimter = ",";
+		}
+		StringBuilder result = new StringBuilder();
+		for (String item : list) {
+			result.append(item);
+			result.append(delimter);
+		}
+		String str = result.toString();
+		return str.substring(0, str.length() - 1);
 	}
 	
 	private static String md5Encrypt(String plain) {

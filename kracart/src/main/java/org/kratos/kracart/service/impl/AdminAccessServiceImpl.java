@@ -7,11 +7,15 @@ import java.util.Set;
 
 import org.kratos.kracart.core.bean.AdminAccessLevel;
 import org.kratos.kracart.core.modules.BaseAccess;
+import org.kratos.kracart.core.modules.ModuleSubGroup;
 import org.kratos.kracart.entity.Administrator;
 import org.kratos.kracart.entity.AdministratorAccess;
+import org.kratos.kracart.entity.Language;
 import org.kratos.kracart.model.AdministratorModel;
+import org.kratos.kracart.model.LanguageModel;
 import org.kratos.kracart.service.AdminAccessService;
 import org.kratos.kracart.utility.CommonUtils;
+import org.kratos.kracart.utility.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,20 +26,26 @@ public class AdminAccessServiceImpl implements AdminAccessService {
 	
 	@Autowired
 	private AdministratorModel administratorModel;
+	@Autowired
+	private LanguageModel languageModel;
 	
 	private Administrator admin;
+	private List<String> modules;
+	private List<AdminAccessLevel> levels;
+	private List<Language> langs;
 	
-	private Set<String> modules;
-	
-	List<AdminAccessLevel> levels;
-	
+	public List<String> getModules() {
+		return modules;
+	}
+
 	public void initialize(String userName) {
 		admin = administratorModel.getAdminLevels(userName);
-		modules = getUserLevels();
+		langs = languageModel.getLanguages();
 		levels = getLevels();
+		modules = getUserLevels();
 	}
 	
-	private Set<String> getUserLevels() {
+	private Set<String> getAllModules() {
 		Set<String> modules = new HashSet<String>();
 		List<AdministratorAccess> levels = admin.getAccess();
 		for (AdministratorAccess access : levels) {
@@ -49,8 +59,9 @@ public class AdminAccessServiceImpl implements AdminAccessService {
 	}
 	
 	private List<AdminAccessLevel> getLevels() {
+		Set<String> allModules = getAllModules();
 		List<AdminAccessLevel> levels = new ArrayList<AdminAccessLevel>();
-		for (String module : modules) {
+		for (String module : allModules) {
 			try {
 				BaseAccess access = (BaseAccess) Class.forName(module).newInstance();
 				String group = access.getGroup();
@@ -85,15 +96,88 @@ public class AdminAccessServiceImpl implements AdminAccessService {
 		}
 		return levels;
 	}
+	
+	private List<String> getUserLevels() {
+		List<String> modules = new ArrayList<String>();
+		for (AdminAccessLevel access : levels) {
+			modules.add(access.getGroup());
+			List<BaseAccess> links = access.getModules();
+			if(links != null && links.size() > 0) {
+				for (BaseAccess link : links) {
+					String module = link.getModule();
+					modules.add(module);
+					List<ModuleSubGroup> subGroup = link.getSubGroup();
+					if(subGroup != null && subGroup.size() > 0) {
+						modules.add(module);
+					}
+				}
+			}
+		}
+		return modules;
+	}
 
 	@Override
-	public String getModules() {
-		return null;
+	public String getModuleObjects() {
+		String menu = "[]";
+		ArrayList<String> modules = new ArrayList<String>();
+		for (AdminAccessLevel access : levels) {
+			modules.add("new Toc.desktop." + CommonUtils.ucFirst(access.getGroup()) + "GroupWindow()");
+			List<BaseAccess> links = access.getModules();
+			if(links != null && links.size() > 0) {
+				for (BaseAccess link : links) {
+					String module = CommonUtils.ucWord(link.getModule());
+					List<ModuleSubGroup> subGroupList = link.getSubGroup();
+					if(subGroupList != null && subGroupList.size() > 0) {
+						modules.add("new Toc.desktop." + module + "SubGroupWindow()");
+						for (ModuleSubGroup subGroup : subGroupList) {
+							modules.add("new Toc.desktop." + module + 
+								"Window({id: '" + subGroup.getIdentifier() + "', " +
+								"title: '" + subGroup.getTitle() + "', " +
+								"iconCls: '" + subGroup.getIconCls() + "', " + 
+								"shortcutIconCls: '" + subGroup.getShortcutIconCls() + "', " +
+								"params: '" + JsonUtils.convertToJsonString(subGroup.getParams(), "null") + "'})");
+							
+						}
+					} else {
+						modules.add("new Toc.desktop." + module + "Window()");
+					}
+				}
+			}
+		}
+		modules.add("new Toc.desktop.LanguagesGroupWindow()");
+		for (Language language : langs) {
+			modules.add("new Toc.desktop." + CommonUtils.ucWord(language.getCode()) + "Window()");
+		}
+		if(modules.size() > 0) {
+			menu = "[" + CommonUtils.listToString(modules, ",") + "]";
+		}
+		return menu;
 	}
 
 	@Override
 	public String getOutputModule() {
-		return null;
+		StringBuilder output = new StringBuilder();
+		for (AdminAccessLevel access : levels) {
+			String group = access.getGroup();
+			StringBuilder groupClass = new StringBuilder();
+			ArrayList<String> modules = new ArrayList<String>();
+			List<BaseAccess> links = access.getModules();
+			if(links != null && links.size() > 0) {
+				for (BaseAccess link : links) {
+					String module = link.getModule();
+					List<ModuleSubGroup> subGroupList = link.getSubGroup();
+					if(subGroupList != null && subGroupList.size() > 0) {
+						modules.add("'" + module + "-subgroup'");
+					} else {
+						modules.add("'" + module + "-win'");
+					}
+				}
+			}
+			groupClass.append("Toc.desktop." + CommonUtils.ucFirst(group) + "GroupWindow = Ext.extend(Toc.desktop.Module, {\n");
+			groupClass.append("appType : 'group',\n");
+			groupClass.append("id : '" + group + "-grp',\n");
+		}
+		return output.toString();
 	}
 
 }

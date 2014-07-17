@@ -67,7 +67,7 @@ public class IndexController extends CommonController {
 		data.put("styles", desktopService.getStyles());
 		
 		adminAccessService.initialize(admin.getName());
-		data.put("modules", adminAccessService.getModules());
+		data.put("modules", adminAccessService.getModuleObjects());
 		data.put("output", adminAccessService.getOutputModule());
 		return new ModelAndView("admin/desktop", data);
 	}
