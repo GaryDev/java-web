@@ -10,7 +10,6 @@ public class NewsLetters extends BaseAccess {
 		group = "tools";
 		icon = "email_send.png";
 		sortOrder = 1100;
-	    //$this->_title = lang('access_administrators_title');
 	}
 
 }

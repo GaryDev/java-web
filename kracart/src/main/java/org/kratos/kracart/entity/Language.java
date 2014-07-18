@@ -31,6 +31,7 @@ public class Language implements Serializable {
 	}
 	public void setCode(String code) {
 		this.code = code;
+		setCountryISO(code.substring(3).toLowerCase());
 	}
 	public String getCountryISO() {
 		return countryISO;

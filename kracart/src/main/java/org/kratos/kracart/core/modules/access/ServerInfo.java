@@ -10,7 +10,6 @@ public class ServerInfo extends BaseAccess {
 		group = "tools";
 		icon = "server_info.png";
 		sortOrder = 1200;
-	    //$this->_title = lang('access_administrators_title');
 	}
 
 }

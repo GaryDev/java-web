@@ -18,6 +18,7 @@ import org.kratos.kracart.service.ConfigurationService;
 import org.kratos.kracart.service.DesktopService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -55,7 +56,7 @@ public class IndexController extends CommonController {
 	}
 	
 	@RequestMapping("/admin/index/desktop")
-	public ModelAndView desktop() {
+	public ModelAndView desktop(HttpServletRequest request) {
 		Administrator admin = new Administrator();
 		admin.setName("admin");	// TODO: From session
 		
@@ -66,10 +67,23 @@ public class IndexController extends CommonController {
 		data.put("launchers", desktopService.getLaunchers());
 		data.put("styles", desktopService.getStyles());
 		
-		adminAccessService.initialize(admin.getName());
+		String path = request.getContextPath();
+		Locale locale = RequestContextUtils.getLocale(request);
+		ResourceBundle accessBundle = ResourceBundle.getBundle("messages_access", locale);
+		adminAccessService.setUserName(admin.getName());
+		adminAccessService.setResouceBundle(accessBundle);
+		adminAccessService.setContextPath(path);
+		adminAccessService.initialize();
 		data.put("modules", adminAccessService.getModuleObjects());
 		data.put("output", adminAccessService.getOutputModule());
 		return new ModelAndView("admin/desktop", data);
+	}
+	
+	@RequestMapping("/admin/index/load-module-view/{module}")
+	public ModelAndView loadModuleView(@PathVariable String module) {
+		String[] tmp = module.split("-");
+		module = tmp[0];
+		return new ModelAndView("admin/" + module + "/main");
 	}
 	
 }

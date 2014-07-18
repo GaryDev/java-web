@@ -3,6 +3,7 @@ package org.kratos.kracart.service.impl;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import org.kratos.kracart.core.bean.AdminAccessLevel;
@@ -33,12 +34,30 @@ public class AdminAccessServiceImpl implements AdminAccessService {
 	private List<String> modules;
 	private List<AdminAccessLevel> levels;
 	private List<Language> langs;
+	private ResourceBundle bundle;
+	private String userName;
+	private String contextPath;
 	
 	public List<String> getModules() {
 		return modules;
 	}
+	
+	@Override
+	public void setResouceBundle(ResourceBundle bundle) {
+		this.bundle = bundle;
+	}
 
-	public void initialize(String userName) {
+	@Override
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	@Override
+	public void setContextPath(String path) {
+		this.contextPath = path;
+	}
+
+	public void initialize() {
 		admin = administratorModel.getAdminLevels(userName);
 		langs = languageModel.getLanguages();
 		levels = getLevels();
@@ -64,28 +83,27 @@ public class AdminAccessServiceImpl implements AdminAccessService {
 		for (String module : allModules) {
 			try {
 				BaseAccess access = (BaseAccess) Class.forName(module).newInstance();
+				access.setTitle(bundle.getString("access_" + access.getModule() + "_title"));
 				String group = access.getGroup();
-				AdminAccessLevel level = new AdminAccessLevel();
+				AdminAccessLevel item = new AdminAccessLevel();
 				if(levels.size() > 0) {
-					for (AdminAccessLevel l : levels) {
-						if(group.equals(l.getGroup())) {
-							level = l;
-							break;
-						}
+					int index = levels.indexOf(new AdminAccessLevel(group));
+					if(index != -1) {
+						item = levels.get(index);
 					}
 				}
 				List<BaseAccess> modules = new ArrayList<BaseAccess>();
-				if(group.equals(level.getGroup())) {
-					if(level.getModules() == null || level.getModules().size() == 0) {
-						level.setModules(modules);
+				if(group.equals(item.getGroup())) {
+					if(item.getModules() == null || item.getModules().size() == 0) {
+						item.setModules(modules);
 					}
-					level.getModules().add(access);
+					item.getModules().add(access);
 				} else {
 					modules.add(access);
-					level.setModules(modules);
-					level.setGroup(group);
+					item.setModules(modules);
+					item.setGroup(group);
+					levels.add(item);
 				}
-				levels.add(level);
 			} catch (InstantiationException e) {
 				e.printStackTrace();
 			} catch (IllegalAccessException e) {
@@ -174,9 +192,119 @@ public class AdminAccessServiceImpl implements AdminAccessService {
 				}
 			}
 			groupClass.append("Toc.desktop." + CommonUtils.ucFirst(group) + "GroupWindow = Ext.extend(Toc.desktop.Module, {\n");
-			groupClass.append("appType : 'group',\n");
-			groupClass.append("id : '" + group + "-grp',\n");
+			groupClass.append("appType: 'group',\n");
+			groupClass.append("id: '" + group + "-grp',\n");
+			groupClass.append("title : '" + bundle.getString("access_group_" + group + "_title") + "',\n");
+			groupClass.append("menu : new Ext.menu.Menu(),\n");
+			groupClass.append("items : [" + CommonUtils.listToString(modules, ",") + "],\n");
+			groupClass.append("init : function(){\n");
+            groupClass.append("this.launcher = {\n");
+            groupClass.append("text: this.title,\n");
+            groupClass.append("iconCls: 'icon-" + group + "-grp',\n");
+            groupClass.append("menu: this.menu"+"\n");
+            groupClass.append("}}});\n\n");
+            
+            output.append(groupClass);
+            
+            if(links != null && links.size() > 0) {
+				for (BaseAccess link : links) {
+					String module = CommonUtils.ucWord(link.getModule());
+					List<ModuleSubGroup> subGroupList = link.getSubGroup();
+					if(subGroupList != null && subGroupList.size() > 0) {
+						modules.clear();
+						for (ModuleSubGroup subGroup : subGroupList) {
+							modules.add("'" + subGroup.getIdentifier() + "'");
+						}
+						groupClass.delete(0, groupClass.length());
+						groupClass.append("Toc.desktop." + module + "SubGroupWindow = Ext.extend(Toc.desktop.Module, {\n");
+						groupClass.append("appType : 'subgroup',\n");
+						groupClass.append("id : '" + link.getModule() + "-subgroup',\n");
+						groupClass.append("title : '" + link.getTitle() + "',\n");
+						groupClass.append("menu : new Ext.menu.Menu(),\n");
+						groupClass.append("items : [" + CommonUtils.listToString(modules, ",") + "],\n");
+						groupClass.append("init : function(){\n");
+			            groupClass.append("this.launcher = {\n");
+			            groupClass.append("text: this.title,\n");
+			            groupClass.append("iconCls: 'icon-" + link.getModule() + "-subgroup',\n");
+	                    groupClass.append("menu: this.menu"+"\n");
+	                    groupClass.append("}}});\n\n");
+						
+						output.append(groupClass);
+						
+						groupClass.delete(0, groupClass.length());
+						groupClass.append("Toc.desktop." + module + "Window = Ext.extend(Toc.desktop.Module, {\n");
+						groupClass.append("appType : 'win',\n");
+						groupClass.append("id : '" + link.getModule() + "-win',\n");
+						groupClass.append("title : '" + link.getTitle() + "',\n");
+						groupClass.append("init : function(){\n");
+			            groupClass.append("this.launcher = {\n");
+			            groupClass.append("text: this.title,\n");
+			            groupClass.append("iconCls: this.iconCls,\n");
+			            groupClass.append("shortcutIconCls: this.shortcutIconCls,\n");
+			            groupClass.append("scope: this\n");
+	                    groupClass.append("}}});\n\n");
+						
+						output.append(groupClass);
+					} else {
+						groupClass.delete(0, groupClass.length());
+						groupClass.append("Toc.desktop." + module + "Window = Ext.extend(Toc.desktop.Module, {\n");
+						groupClass.append("appType : 'win',\n");
+						groupClass.append("id : '" + link.getModule() + "-win',\n");
+						groupClass.append("title : '" + link.getTitle() + "',\n");
+						groupClass.append("init : function(){\n");
+			            groupClass.append("this.launcher = {\n");
+			            groupClass.append("text: this.title,\n");
+			            groupClass.append("iconCls: 'icon-" + link.getModule() + "-win',\n");
+			            groupClass.append("shortcutIconCls: 'icon-" + link.getModule() + "-shortcut',\n");
+			            groupClass.append("scope: this\n");
+	                    groupClass.append("}}});\n\n");
+	                    
+	                    output.append(groupClass);
+					}
+				}
+            }
 		}
+		output.append(getLanguageModule());
+		return output.toString();
+	}
+	
+	private String getLanguageModule() {
+		StringBuilder output = new StringBuilder();
+		List<String> languages = new ArrayList<String>();
+		for (Language l : langs) {
+			languages.add("'lang-" + l.getCode().toLowerCase() + "-win'");
+		}
+		
+		output.append("Toc.desktop.LanguagesGroupWindow = Ext.extend(Toc.desktop.Module, {\n");
+		output.append("appType : 'group',\n");
+		output.append("id : 'languages-grp',\n");
+		output.append("title : '" + bundle.getString("access_group_languages_title") + "',\n");
+		output.append("menu : new Ext.menu.Menu(),\n");
+		output.append("items : [" + CommonUtils.listToString(languages, ",") + "],\n");
+		output.append("init : function(){\n");
+		output.append("this.launcher = {\n");
+        output.append("text: '" + bundle.getString("header_title_languages") + "',\n");
+        output.append("iconCls: 'icon-languages-grp',\n");
+        output.append("menu: this.menu"+"\n");
+        output.append("}}});\n\n");
+		
+        String url = contextPath + "/admin/index";
+        for (Language l : langs) {
+        	String code = CommonUtils.ucWord(l.getCode());
+        	output.append("Toc.desktop." + code + "Window = Ext.extend(Toc.desktop.Module, {\n");
+        	output.append("appType : 'win',\n");
+        	output.append("id : 'lang-" + l.getCode().toLowerCase() + "-win',\n");
+        	output.append("title: '" + l.getName() + "',\n");
+        	output.append("init : function(){\n");
+    		output.append("this.launcher = {\n");
+    		output.append("text: '" + l.getName() + "',\n");
+    		output.append("iconCls: 'icon-" + l.getCountryISO() + "-win',\n");
+    		output.append("shortcutIconCls: 'icon-" + l.getCode() + "-shortcut',\n");
+    		output.append("handler: function(){window.location = '" + url + "?lang=" + l.getCode() + "';},\n");
+            output.append("scope: this\n");
+            output.append("}}});\n\n");
+        }
+		
 		return output.toString();
 	}
 

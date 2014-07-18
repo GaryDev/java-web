@@ -17,7 +17,7 @@
 	<script src="${ctx}/templates/base/web/javascript/extjs/ext-all-debug.js"></script>
 	<style type="text/css">
 	<c:forEach items="${langs}" var="l">
-		<c:out value=".icon-${l.countryISO}-win {background-image: url(${ctx}/assets/images/worldflags/${l.countryISO}.png !important;}" escapeXml="false"></c:out>
+		<c:out value=".icon-${l.countryISO}-win {background-image: url(${ctx}/assets/images/worldflags/${l.countryISO}.png) !important;}" escapeXml="false"></c:out>
 	</c:forEach>
     </style> 
     <decorator:head />

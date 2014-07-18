@@ -22,6 +22,8 @@
 				<value>messages</value>
 				<value>messages_login</value>
 				<value>messages_desktop</value>
+				<value>messages_access</value>
+				<value>messages_administrators</value>
 			</list>
 		</property>
     </bean>

@@ -23,5 +23,13 @@ public class BaseAccess {
 	public List<ModuleSubGroup> getSubGroup() {
 		return subGroup;
 	}
+	
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
 }

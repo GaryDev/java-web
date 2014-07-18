@@ -1,6 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <c:set var="ctx" value="${pageContext.request.contextPath}"></c:set>
 
 <link rel="stylesheet" type="text/css" href="${ctx}/templates/base/web/css/desktop.css" />
@@ -24,7 +24,7 @@
     Toc.CONF = {
       TEMPLATE: 'default',
       CONN_URL: '${ctx}/admin/index',
-      LOAD_URL: '${ctx}/admin/index/load_module_view',
+      LOAD_URL: '${ctx}/admin/index/load-module-view',
       PDF_URL: '${ctx}/pdf',
       GRID_PAGE_SIZE : <c:out value="${pageSize}" escapeXml="false"></c:out>,
       GRID_STEPS : <c:out value="${steps}" escapeXml="false"></c:out>,

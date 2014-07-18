@@ -10,7 +10,6 @@ public class Images extends BaseAccess {
 		group = "tools";
 		icon = "weight.png";
 		sortOrder = 1000;
-	    //$this->_title = lang('access_administrators_title');
 	}
 
 }
