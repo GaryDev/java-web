@@ -16,13 +16,13 @@ Ext.define('Toc.administrators.AdministratorsGrid', {
     config.store = Ext.create('Ext.data.Store', {
       fields:[
         'id', 
-        'user_name',
-        'email_address'
+        'name',
+        'email'
       ],
       pageSize: Toc.CONF.GRID_PAGE_SIZE,
       proxy: {
         type: 'ajax',
-        url : '${ctx}/admin/administrators/list-administrators'',
+        url : '${ctx}/admin/administrators/list-administrators',
         reader: {
           type: 'json',
           root: Toc.CONF.JSON_READER_ROOT,
@@ -34,8 +34,8 @@ Ext.define('Toc.administrators.AdministratorsGrid', {
     
     config.selModel = Ext.create('Ext.selection.CheckboxModel');
     config.columns =[
-      {header: '<spring:message code="table_heading_administrators"></spring:message>', dataIndex: 'user_name', flex: 1},
-      {header: '<spring:message code="table_heading_email"></spring:message>', dataIndex: 'email_address', width: 250},
+      {header: '<spring:message code="table_heading_administrators"></spring:message>', dataIndex: 'name', flex: 1},
+      {header: '<spring:message code="table_heading_email"></spring:message>', dataIndex: 'email', width: 250},
       {
         xtype: 'actioncolumn', 
         width: 80,

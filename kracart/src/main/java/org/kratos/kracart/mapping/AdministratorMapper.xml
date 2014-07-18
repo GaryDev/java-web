@@ -29,6 +29,15 @@
 		 where email_address = #{email}
 	</select>
 	
+	<select id="getAdministrators" parameterType="map" resultMap="rmAdmin">
+		select id, user_name, email_address
+		  from toc_administrators
+		 order by user_name
+		 <if test="start != null and limit != null">
+		 	limit #{start}, #{limit}
+		 </if>
+	</select>
+	
 	<select id="getAdminSettingByName" parameterType="string" resultType="string">
 		select user_settings
 		  from toc_administrators

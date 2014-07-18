@@ -1,6 +1,7 @@
 package org.kratos.kracart.service.impl;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -61,6 +62,19 @@ public class AdminServiceImpl implements AdminService {
 		admin.setPassword(newPassword);
 		admin.setEmail(email);
 		administratorModel.updatePassword(admin);
+	}
+
+	@Override
+	public List<Administrator> getAdministartors(String start, String limit) {
+		Map<String, Object> criteria = new HashMap<String, Object>();
+		criteria.put("start", start == null ? null : Integer.parseInt(start));
+		criteria.put("limit", limit == null ? null : Integer.parseInt(limit));
+		return administratorModel.getAdministrators(criteria);
+	}
+
+	@Override
+	public int getTotal() {
+		return getAdministartors(null, null).size();
 	}
 
 }

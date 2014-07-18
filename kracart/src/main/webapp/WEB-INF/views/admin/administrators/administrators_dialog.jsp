@@ -96,7 +96,7 @@ Ext.define('Toc.administrators.AdministratorsDialog', {
         {
           xtype: 'textfield', 
           fieldLabel: '<spring:message code="field_username"></spring:message>', 
-          name: 'user_name', 
+          name: 'name', 
           allowBlank: false
         },
         {
@@ -109,7 +109,7 @@ Ext.define('Toc.administrators.AdministratorsDialog', {
         {
           xtype: 'textfield', 
           fieldLabel: '<spring:message code="field_email"></spring:message>', 
-          name: 'email_address', 
+          name: 'email', 
           allowBlank: false
         }
       ]

@@ -49,7 +49,7 @@ public abstract class CommonUtils {
 	public static String ucFirst(String str) {
 		if(StringUtils.hasLength(str)) {
 			String first = str.substring(0, 1);
-			return str.replace(first, first.toUpperCase());
+			return first.toUpperCase() + str.substring(1);
 		}
 		return str;
 	}

@@ -45,7 +45,7 @@ Ext.override(Toc.desktop.AdministratorsWindow, {
   
   onEditAdministrators: function(grd, record) {
     var dlg = this.createAdministratorsDialog({'aID': record.get('id')});
-    dlg.setTitle(record.get('user_name'));
+    dlg.setTitle(record.get('name'));
     
     dlg.pnlAccessTree.getStore().on('load', function() {dlg.pnlAccessTree.expandAll();}, this);
     
