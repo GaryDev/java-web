@@ -65,7 +65,7 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	@Override
-	public List<Administrator> getAdministartors(String start, String limit) {
+	public List<Administrator> getAdministrators(String start, String limit) {
 		Map<String, Object> criteria = new HashMap<String, Object>();
 		criteria.put("start", start == null ? null : Integer.parseInt(start));
 		criteria.put("limit", limit == null ? null : Integer.parseInt(limit));
@@ -74,7 +74,12 @@ public class AdminServiceImpl implements AdminService {
 
 	@Override
 	public int getTotal() {
-		return getAdministartors(null, null).size();
+		return getAdministrators(null, null).size();
+	}
+
+	@Override
+	public Administrator getAdministratorById(int id) {
+		return administratorModel.getAdministratorById(id);
 	}
 
 }

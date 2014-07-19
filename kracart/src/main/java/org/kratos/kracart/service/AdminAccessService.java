@@ -1,6 +1,9 @@
 package org.kratos.kracart.service;
 
+import java.util.List;
 import java.util.ResourceBundle;
+
+import org.kratos.kracart.core.bean.AdminModuleParent;
 
 
 public interface AdminAccessService {
@@ -11,5 +14,7 @@ public interface AdminAccessService {
 	public void initialize();
 	public String getModuleObjects();
 	public String getOutputModule();
+	public List<AdminModuleParent> getAdminModules(String name);
+	public List<AdminModuleParent> getModules(boolean isGlobal);
 
 }

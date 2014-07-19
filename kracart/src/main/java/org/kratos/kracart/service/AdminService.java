@@ -10,7 +10,8 @@ public interface AdminService {
 	public boolean IsLogon();
 	public boolean validateEmail(String email);
 	public boolean resetPassword(String email, String ip, Locale locale);
-	public List<Administrator> getAdministartors(String start, String limit);
+	public Administrator getAdministratorById(int id);
+	public List<Administrator> getAdministrators(String start, String limit);
 	public int getTotal();
 
 }

@@ -23,15 +23,23 @@
 		 where email_address = #{email}
 	</update>
 	
-	<select id="getAdministratorByMail" parameterType="string" resultMap="rmAdmin">
+	<sql id="selectAdminstrator">
 		select id, user_name, email_address
 		  from toc_administrators
+	</sql>
+	
+	<select id="getAdministratorByMail" parameterType="string" resultMap="rmAdmin">
+		<include refid="selectAdminstrator"/>
 		 where email_address = #{email}
 	</select>
 	
+	<select id="getAdministratorById" parameterType="int" resultMap="rmAdmin">
+		<include refid="selectAdminstrator"/>
+		 where id = #{id}
+	</select>
+	
 	<select id="getAdministrators" parameterType="map" resultMap="rmAdmin">
-		select id, user_name, email_address
-		  from toc_administrators
+		<include refid="selectAdminstrator"/>
 		 order by user_name
 		 <if test="start != null and limit != null">
 		 	limit #{start}, #{limit}

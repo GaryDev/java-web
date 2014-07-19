@@ -1,12 +1,16 @@
 package org.kratos.kracart.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
 
 import org.kratos.kracart.core.bean.AdminAccessLevel;
+import org.kratos.kracart.core.bean.AdminModuleNode;
+import org.kratos.kracart.core.bean.AdminModuleParent;
 import org.kratos.kracart.core.modules.BaseAccess;
 import org.kratos.kracart.core.modules.ModuleSubGroup;
 import org.kratos.kracart.entity.Administrator;
@@ -19,6 +23,7 @@ import org.kratos.kracart.utility.CommonUtils;
 import org.kratos.kracart.utility.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 @Service("adminAccessService")
 public class AdminAccessServiceImpl implements AdminAccessService {
@@ -31,16 +36,11 @@ public class AdminAccessServiceImpl implements AdminAccessService {
 	private LanguageModel languageModel;
 	
 	private Administrator admin;
-	private List<String> modules;
 	private List<AdminAccessLevel> levels;
 	private List<Language> langs;
 	private ResourceBundle bundle;
 	private String userName;
 	private String contextPath;
-	
-	public List<String> getModules() {
-		return modules;
-	}
 	
 	@Override
 	public void setResouceBundle(ResourceBundle bundle) {
@@ -58,30 +58,39 @@ public class AdminAccessServiceImpl implements AdminAccessService {
 	}
 
 	public void initialize() {
-		admin = administratorModel.getAdminLevels(userName);
+		if(StringUtils.hasLength(userName)) {
+			admin = administratorModel.getAdminLevels(userName);
+		}
 		langs = languageModel.getLanguages();
-		levels = getLevels();
-		modules = getUserLevels();
+		levels = getLevels(getAdminModules());
 	}
 	
-	private Set<String> getAllModules() {
+	private Set<String> getAdminModules() {
 		Set<String> modules = new HashSet<String>();
 		List<AdministratorAccess> levels = admin.getAccess();
 		for (AdministratorAccess access : levels) {
 			modules.add(access.getModule());
 		}
-		if(modules.contains("*")) {
-			modules.clear();
-			modules.addAll(CommonUtils.getClassName(MODULE_DIR, getClass().getClassLoader().getResource("")));
-		}
 		return modules;
 	}
 	
-	private List<AdminAccessLevel> getLevels() {
-		Set<String> allModules = getAllModules();
+	private Set<String> getAllModules(Set<String> adminModules) {
+		if(adminModules == null || adminModules.size() == 0 || adminModules.contains("*")) {
+			Set<String> modules = new HashSet<String>();
+			modules.addAll(CommonUtils.getClassName(MODULE_DIR, getClass().getClassLoader().getResource("")));
+			return modules;
+		}
+		return adminModules;
+	}
+	
+	private List<AdminAccessLevel> getLevels(Set<String> adminModules) {
+		Set<String> allModules = getAllModules(adminModules);
 		List<AdminAccessLevel> levels = new ArrayList<AdminAccessLevel>();
 		for (String module : allModules) {
 			try {
+				if(module.indexOf(MODULE_DIR) == -1) {
+					module = MODULE_DIR + "." + CommonUtils.ucFirst(module);
+				}
 				BaseAccess access = (BaseAccess) Class.forName(module).newInstance();
 				access.setTitle(bundle.getString("access_" + access.getModule() + "_title"));
 				String group = access.getGroup();
@@ -115,23 +124,56 @@ public class AdminAccessServiceImpl implements AdminAccessService {
 		return levels;
 	}
 	
-	private List<String> getUserLevels() {
-		List<String> modules = new ArrayList<String>();
-		for (AdminAccessLevel access : levels) {
-			modules.add(access.getGroup());
-			List<BaseAccess> links = access.getModules();
-			if(links != null && links.size() > 0) {
-				for (BaseAccess link : links) {
-					String module = link.getModule();
-					modules.add(module);
-					List<ModuleSubGroup> subGroup = link.getSubGroup();
-					if(subGroup != null && subGroup.size() > 0) {
-						modules.add(module);
+	public List<AdminModuleParent> getAdminModules(String name) {
+		List<AdminModuleParent> parents = new ArrayList<AdminModuleParent>();
+		this.userName = name;
+		initialize();
+		Set<String> adminModules = getAdminModules();
+		if(adminModules.contains("*")) {
+			parents = getModules(true);
+		} else {
+			parents = getModules(false, adminModules);
+		}
+		return parents;
+	}
+	
+	public List<AdminModuleParent> getModules(boolean isGlobal) {
+		return getModules(isGlobal, new HashSet<String>());
+	}
+	
+	private List<AdminModuleParent> getModules(boolean isGlobal, Set<String> modules) {
+		List<AdminAccessLevel> allLevels = getLevels(modules);
+		Map<String, List<AdminModuleNode>> accessModules = new HashMap<String, List<AdminModuleNode>>();
+		for (AdminAccessLevel level : allLevels) {
+			List<BaseAccess> moduleList = level.getModules();
+			if(moduleList != null && moduleList.size() > 0) {
+				for (BaseAccess module : moduleList) {
+					String title = bundle.getString("access_group_" + module.getGroup() + "_title");
+					AdminModuleNode node = new AdminModuleNode();
+					node.setId(module.getModule());
+					node.setText(module.getTitle());
+					node.setLeaf(true);
+					node.setChecked(isGlobal || modules.contains(module.getModule()));
+					if(accessModules.containsKey(title)) {
+						accessModules.get(title).add(node);
+					} else {
+						List<AdminModuleNode> nodeList = new ArrayList<AdminModuleNode>();
+						nodeList.add(node);
+						accessModules.put(title, nodeList);
 					}
 				}
 			}
 		}
-		return modules;
+		List<AdminModuleParent> parents = new ArrayList<AdminModuleParent>();
+		int count = 1;
+		for (String	group : accessModules.keySet()) {
+			AdminModuleParent parent = new AdminModuleParent();
+			parent.setId(count++);
+			parent.setText(group);
+			parent.setChildren(accessModules.get(group));
+			parents.add(parent);
+		}
+		return parents;
 	}
 
 	@Override
