@@ -117,7 +117,7 @@ public class DesktopServiceImpl implements DesktopService {
 		Map<String, String> param = new HashMap<String, String>();
 		param.put("name", admin.getName());
 		param.put("setting", s);
-		administratorModel.saveAdminSetting(param);
+		administratorModel.updateAdminSetting(param);
 	}
 	
 	@SuppressWarnings("unchecked")

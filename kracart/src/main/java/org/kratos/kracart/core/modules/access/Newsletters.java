@@ -2,9 +2,9 @@ package org.kratos.kracart.core.modules.access;
 
 import org.kratos.kracart.core.modules.BaseAccess;
 
-public class NewsLetters extends BaseAccess {
+public class Newsletters extends BaseAccess {
 
-	public NewsLetters() {
+	public Newsletters() {
 		super();
 		module = "newsletters";
 		group = "tools";

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.kratos.kracart.entity.Administrator;
+import org.kratos.kracart.vo.AdministratorVO;
 
 public interface AdminService {
 	
@@ -13,5 +14,6 @@ public interface AdminService {
 	public Administrator getAdministratorById(int id);
 	public List<Administrator> getAdministrators(String start, String limit);
 	public int getTotal();
+	public int saveAdministrator(AdministratorVO voAdmin);
 
 }

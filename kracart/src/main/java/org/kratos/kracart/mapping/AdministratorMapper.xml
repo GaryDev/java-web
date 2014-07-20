@@ -17,25 +17,25 @@
 		</collection>
 	</resultMap>
 	
-	<update id="updatePassword" parameterType="Administrator">
-		update toc_administrators
-		   set user_password = #{password}
-		 where email_address = #{email}
-	</update>
-	
 	<sql id="selectAdminstrator">
 		select id, user_name, email_address
 		  from toc_administrators
 	</sql>
 	
-	<select id="getAdministratorByMail" parameterType="string" resultMap="rmAdmin">
+	<select id="getAdministrator" parameterType="Administrator" resultMap="rmAdmin">
 		<include refid="selectAdminstrator"/>
-		 where email_address = #{email}
-	</select>
-	
-	<select id="getAdministratorById" parameterType="int" resultMap="rmAdmin">
-		<include refid="selectAdminstrator"/>
-		 where id = #{id}
+		<trim prefix="where" prefixOverrides="and">
+			<if test="id != null and id > 0">
+				and id = #{id}
+			</if>
+			<if test="email != null">
+				and email_address = #{email}
+			</if>
+			<if test="name != null">
+				and user_name = #{name}
+			</if>
+		</trim>
+		limit 1
 	</select>
 	
 	<select id="getAdministrators" parameterType="map" resultMap="rmAdmin">
@@ -59,10 +59,53 @@
 		 where a.user_name = #{name}
 	</select>
 	
-	<update id="saveAdminSetting" parameterType="map">
+	<select id="getAdminAccessModule" parameterType="AdministratorAccess" resultType="AdministratorAccess">
+		select administrators_id as id, module
+		  from toc_administrators_access
+		 where administrators_id = #{id}
+		   and module = #{module}
+	</select>
+	
+	<update id="updatePassword" parameterType="Administrator">
+		update toc_administrators
+		   set user_password = #{password}
+		 where email_address = #{email}
+	</update>
+	
+	<update id="updateAdminSetting" parameterType="map">
 		update toc_administrators
 		   set user_settings = #{setting}
 		 where user_name = #{name}
 	</update>
+	
+	<update id="updateAdministrator" parameterType="Administrator">
+		update toc_administrators
+		<trim prefix="set" suffixOverrides=",">
+		   	<if test="name != null">user_name = #{name},</if>
+		   	<if test="password != null">user_password = #{password},</if>
+		   	<if test="email != null">email_address = #{email}</if>
+		 </trim>
+		 where id = #{id}
+	</update>
+	
+	<insert id="insertAdministrator" parameterType="Administrator" 
+		keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+		insert into toc_administrators (user_name, user_password, email_address)
+		values (#{name}, #{password}, #{email})		
+	</insert>
 
+	<insert id="insertAdministratorAccess" parameterType="AdministratorAccess">
+		insert into toc_administrators_access (administrators_id, module)
+		values (#{id}, #{module})
+	</insert>
+
+	<delete id="deleteAdministratorAccess" parameterType="map">
+		delete 
+		  from toc_administrators_access
+		 where administrators_id = #{id}
+		   and module not in
+		   <foreach collection="modules" index="index" item="module" open="(" separator="," close=")">
+		   	#{module}
+		   </foreach>
+	</delete>
 </mapper>

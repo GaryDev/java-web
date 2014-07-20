@@ -17,12 +17,14 @@ import org.kratos.kracart.entity.Administrator;
 import org.kratos.kracart.service.AdminAccessService;
 import org.kratos.kracart.service.AdminService;
 import org.kratos.kracart.service.ConfigurationService;
+import org.kratos.kracart.vo.AdministratorVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 @Controller
@@ -79,6 +81,37 @@ public class AdministratorsController extends CommonController {
 		Map<String, Object> response = new HashMap<String, Object>();
 		response.put("success", true);
 		response.put("data", admin);
+		return response;
+	}
+	
+	@RequestMapping("/admin/administrators/save-administrator")
+	@ResponseBody
+	public Map<String, Object> save(AdministratorVO voAdmin, String modulesJSON, HttpServletRequest request) {
+		WebApplicationContext ctx = RequestContextUtils.getWebApplicationContext(request);
+		Locale locale = RequestContextUtils.getLocale(request);
+		String feedback = "";
+		int result = adminService.saveAdministrator(voAdmin);
+		boolean success = (result == 1);
+		switch (result) {
+		case 1:
+			feedback = ctx.getMessage("ms_success_action_performed", null, locale);
+			break;
+		case -1:
+			feedback = ctx.getMessage("ms_error_action_not_performed", null, locale);
+			break;
+		case -2:
+			feedback = ctx.getMessage("ms_error_username_already_exists", null, locale);
+			break;
+		case -3:
+			feedback = ctx.getMessage("ms_error_email_format", null, locale);
+			break;
+		case -4:
+			feedback = ctx.getMessage("ms_error_email_already_exists", null, locale);
+			break;
+		}
+		Map<String, Object> response = new HashMap<String, Object>();
+		response.put("success", success);
+		response.put("feedback", feedback);
 		return response;
 	}
 

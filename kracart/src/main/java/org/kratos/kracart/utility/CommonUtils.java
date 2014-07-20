@@ -17,11 +17,8 @@ import org.springframework.util.StringUtils;
 public abstract class CommonUtils {
 	
 	public static void main(String[] args) {
-		List<String> list = new ArrayList<String>();
-		list.add("a");
-		list.add("b");
-		list.add("c");
-		System.out.println(listToString(list, ","));
+		String test = "\u56fe\u7247\u5de5\u5177";
+		System.out.println(test);
 	}
 
 	public static String encryptString(String plain) {
@@ -46,6 +43,10 @@ public abstract class CommonUtils {
 		return randStr;
 	}
 	
+	private static String md5Encrypt(String plain) {
+		return DigestUtils.md5DigestAsHex(plain.getBytes());
+	}
+	
 	public static String ucFirst(String str) {
 		if(StringUtils.hasLength(str)) {
 			String first = str.substring(0, 1);
@@ -66,6 +67,10 @@ public abstract class CommonUtils {
 		return str;
 	}
 	
+	public static String listToString(List<String> list) {
+		return listToString(list, ",");
+	}
+	
 	public static String listToString(List<String> list, String delimter) {
 		if(list == null || list.size() == 0) {
 			return "";
@@ -80,11 +85,6 @@ public abstract class CommonUtils {
 		}
 		String str = result.toString();
 		return str.substring(0, str.length() - 1);
-	}
-	
-	private static String md5Encrypt(String plain) {
-		return DigestUtils.md5DigestAsHex(plain.getBytes());
-		
 	}
 	
 	public static void mapToBean(Map<String, Object> map, Object target) {

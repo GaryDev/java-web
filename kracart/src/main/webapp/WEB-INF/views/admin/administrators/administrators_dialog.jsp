@@ -103,7 +103,7 @@ Ext.define('Toc.administrators.AdministratorsDialog', {
           xtype: 'textfield',
           inputType: 'password',
           fieldLabel: '<spring:message code="field_password"></spring:message>', 
-          name: 'user_password', 
+          name: 'password', 
           allowBlank: this.aID > 0 ? true : false
         },
         {
@@ -120,7 +120,7 @@ Ext.define('Toc.administrators.AdministratorsDialog', {
   
   getAccessPanel: function() {
     this.chkGlobal = Ext.create('Ext.form.Checkbox', {
-      name: 'access_globaladmin', 
+      name: 'accessGlobal', 
       boxLabel: '<spring:message code="global_access"></spring:message>',
       listeners: {
         change: function(chk, checked) {
@@ -156,7 +156,7 @@ Ext.define('Toc.administrators.AdministratorsDialog', {
     });
     
     this.pnlAccessTree = Ext.create('Ext.tree.TreePanel', {
-      name: 'access_modules',
+      name: 'accessModules',
       id: 'access_modules',
       region: 'center',
       store: dsAccessTree,
@@ -204,7 +204,7 @@ Ext.define('Toc.administrators.AdministratorsDialog', {
     
     if (!Ext.isEmpty(checkedRecords)) {
       Ext.each(checkedRecords, function(record) {
-        modules.push(record.get('text'));
+        modules.push(record.get('id'));
       });
     }
     
