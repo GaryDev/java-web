@@ -17,7 +17,9 @@ public interface AdministratorModel {
 	public void updatePassword(Administrator admin);
 	public void insertAdministrator(Administrator admin);
 	public void updateAdministrator(Administrator admin);
+	public void deleteAdministrator(int id);
 	public void insertAdministratorAccess(AdministratorAccess access);
 	public void deleteAdministratorAccess(Map<String, Object> params);
+	public void deleteAdministratorAccessById(int id);
 
 }

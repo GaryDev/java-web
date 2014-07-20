@@ -2,7 +2,6 @@ package org.kratos.kracart.controller.admin;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.support.RequestContextUtils;
 
 @Controller
 public class IndexController extends CommonController {
@@ -46,8 +44,7 @@ public class IndexController extends CommonController {
 			data.put("pageSize", configurationService.getConfigurationValue(ConfigConstant.KEY_MAX_DISPLAY_SEARCH_RESULTS));
 			desktopService.loadDesktopConstants(data);
 			desktopService.loadLanguages(data, (List<Language>) request.getAttribute("langs"));
-			Locale locale = RequestContextUtils.getLocale(request);
-			ResourceBundle desktopBundle = ResourceBundle.getBundle("messages_desktop", locale);
+			ResourceBundle desktopBundle = ResourceBundle.getBundle("messages_desktop", getLocale(request));
 			desktopService.loadLanguageDefinition(data, desktopBundle);
 		} else {
 			return new ModelAndView("redirect:/admin/login");
@@ -68,8 +65,7 @@ public class IndexController extends CommonController {
 		data.put("styles", desktopService.getStyles());
 		
 		String path = request.getContextPath();
-		Locale locale = RequestContextUtils.getLocale(request);
-		ResourceBundle accessBundle = ResourceBundle.getBundle("messages_access", locale);
+		ResourceBundle accessBundle = ResourceBundle.getBundle("messages_access", getLocale(request));
 		adminAccessService.setUserName(admin.getName());
 		adminAccessService.setResouceBundle(accessBundle);
 		adminAccessService.setContextPath(path);

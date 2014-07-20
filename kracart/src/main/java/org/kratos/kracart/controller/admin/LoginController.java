@@ -1,7 +1,6 @@
 package org.kratos.kracart.controller.admin;
 
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,9 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.support.RequestContextUtils;
 
 @Controller
 public class LoginController extends CommonController {
@@ -39,29 +36,26 @@ public class LoginController extends CommonController {
 	public Map<String, Object> getPassword(@RequestParam String emailAddress, HttpServletRequest request) {
 		boolean error = false;
 		String feedback = "";
-				
-		WebApplicationContext ctx = RequestContextUtils.getWebApplicationContext(request);
-		Locale locale = RequestContextUtils.getLocale(request);
 		Map<String, Object> body = new HashMap<String, Object>();
 		
 		if(!ValidatorUtils.validateEmail(emailAddress)) {
 			error = true;
-			feedback = ctx.getMessage("ms_error_wrong_email_address", null, locale);
+			feedback = getMessage(request, "ms_error_wrong_email_address");
 		} else if(!adminService.validateEmail(emailAddress)) {
 			error = true;
-			feedback = ctx.getMessage("ms_error_email_not_exist", null, locale);
+			feedback = getMessage(request, "ms_error_email_not_exist");
 		}
 		
 		if(!error) {
-			if(!adminService.resetPassword(emailAddress, request.getRemoteAddr(), locale)) {
+			if(!adminService.resetPassword(emailAddress, request.getRemoteAddr(), getLocale(request))) {
 				error = true;
-				feedback = ctx.getMessage("ms_error_email_send_failure", null, locale);
+				feedback = getMessage(request, "ms_error_email_send_failure");
 			}
 		}
 		
 		if(!error) {
 			body.put("success", true);
-			body.put("feedback", ctx.getMessage("ms_success_action_performed", null, RequestContextUtils.getLocale(request)));
+			body.put("feedback", getMessage(request, "ms_success_action_performed"));
 		} else {
 			body.put("success", false);
 			body.put("feedback", feedback);

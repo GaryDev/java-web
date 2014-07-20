@@ -53,6 +53,10 @@ public abstract class JsonUtils {
 		return null;
 	}
 	
+	public static ArrayList<String> convertJsonStringToList(String jsonString) {
+		return convertJsonStringToList(jsonString, ArrayList.class, String.class);
+	}
+	
 	private static JavaType getCollectionType(Class<?> collectionClass, Class<?>... elementClasses) {   
 		return mapper.getTypeFactory().constructParametricType(collectionClass, elementClasses);   
 	}

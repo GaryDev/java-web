@@ -3,7 +3,6 @@ package org.kratos.kracart.controller.admin;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -17,6 +16,7 @@ import org.kratos.kracart.entity.Administrator;
 import org.kratos.kracart.service.AdminAccessService;
 import org.kratos.kracart.service.AdminService;
 import org.kratos.kracart.service.ConfigurationService;
+import org.kratos.kracart.utility.JsonUtils;
 import org.kratos.kracart.vo.AdministratorVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,8 +24,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.servlet.support.RequestContextUtils;
 
 @Controller
 public class AdministratorsController extends CommonController {
@@ -59,8 +57,7 @@ public class AdministratorsController extends CommonController {
 				@RequestParam(defaultValue="", required=false) String global,
 				HttpServletRequest request) {
 		List<AdminModuleParent> response = new ArrayList<AdminModuleParent>();
-		Locale locale = RequestContextUtils.getLocale(request);
-		ResourceBundle bundle = ResourceBundle.getBundle("messages_access", locale);
+		ResourceBundle bundle = ResourceBundle.getBundle("messages_access", getLocale(request));
 		adminAccessService.setResouceBundle(bundle);
 		int id = StringUtils.hasLength(aID) ? Integer.parseInt(aID) : 0;
 		if(id > 0) {
@@ -86,29 +83,50 @@ public class AdministratorsController extends CommonController {
 	
 	@RequestMapping("/admin/administrators/save-administrator")
 	@ResponseBody
-	public Map<String, Object> save(AdministratorVO voAdmin, String modulesJSON, HttpServletRequest request) {
-		WebApplicationContext ctx = RequestContextUtils.getWebApplicationContext(request);
-		Locale locale = RequestContextUtils.getLocale(request);
+	public Map<String, Object> save(AdministratorVO voAdmin, HttpServletRequest request) {
 		String feedback = "";
 		int result = adminService.saveAdministrator(voAdmin);
 		boolean success = (result == 1);
 		switch (result) {
 		case 1:
-			feedback = ctx.getMessage("ms_success_action_performed", null, locale);
+			feedback = getMessage(request, "ms_success_action_performed");
 			break;
 		case -1:
-			feedback = ctx.getMessage("ms_error_action_not_performed", null, locale);
+			feedback = getMessage(request, "ms_error_action_not_performed");
 			break;
 		case -2:
-			feedback = ctx.getMessage("ms_error_username_already_exists", null, locale);
+			feedback = getMessage(request, "ms_error_username_already_exists");
 			break;
 		case -3:
-			feedback = ctx.getMessage("ms_error_email_format", null, locale);
+			feedback = getMessage(request, "ms_error_email_format");
 			break;
 		case -4:
-			feedback = ctx.getMessage("ms_error_email_already_exists", null, locale);
+			feedback = getMessage(request, "ms_error_email_already_exists");
 			break;
 		}
+		Map<String, Object> response = new HashMap<String, Object>();
+		response.put("success", success);
+		response.put("feedback", feedback);
+		return response;
+	}
+	
+	@RequestMapping("/admin/administrators/delete-administrator")
+	@ResponseBody
+	public Map<String, Object> delete(String adminId, HttpServletRequest request) {
+		return deleteAdministratorById(adminId, false, request);
+	}
+	
+	@RequestMapping("/admin/administrators/delete-administrators")
+	@ResponseBody
+	public Map<String, Object> deleteMultiple(String batch, HttpServletRequest request) {
+		return deleteAdministratorById(batch, true, request);
+	}
+	
+	private Map<String, Object> deleteAdministratorById(String id, boolean isJson, HttpServletRequest request) {
+		Object[] idArray = isJson ? JsonUtils.convertJsonStringToList(id).toArray() : new String[] {id};
+		int result = adminService.deleteAdministrator(idArray);
+		boolean success = (result == 1);
+		String feedback = success ? getMessage(request, "ms_success_action_performed") : getMessage(request, "ms_error_action_not_performed");
 		Map<String, Object> response = new HashMap<String, Object>();
 		response.put("success", success);
 		response.put("feedback", feedback);

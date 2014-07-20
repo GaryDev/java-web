@@ -15,5 +15,6 @@ public interface AdminService {
 	public List<Administrator> getAdministrators(String start, String limit);
 	public int getTotal();
 	public int saveAdministrator(AdministratorVO voAdmin);
+	public int deleteAdministrator(Object[] idArray);
 
 }

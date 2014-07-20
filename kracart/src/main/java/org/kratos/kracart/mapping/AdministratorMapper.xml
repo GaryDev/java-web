@@ -93,6 +93,12 @@
 		insert into toc_administrators (user_name, user_password, email_address)
 		values (#{name}, #{password}, #{email})		
 	</insert>
+	
+	<delete id="deleteAdministrator" parameterType="int">
+		delete
+		  from toc_administrators
+		 where id = #{id}
+	</delete>
 
 	<insert id="insertAdministratorAccess" parameterType="AdministratorAccess">
 		insert into toc_administrators_access (administrators_id, module)
@@ -108,4 +114,11 @@
 		   	#{module}
 		   </foreach>
 	</delete>
+	
+	<delete id="deleteAdministratorAccessById" parameterType="int">
+		delete 
+		  from toc_administrators_access
+		 where administrators_id = #{id}
+	</delete>
+	
 </mapper>

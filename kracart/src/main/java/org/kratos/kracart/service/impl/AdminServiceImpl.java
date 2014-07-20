@@ -113,9 +113,11 @@ public class AdminServiceImpl implements AdminService {
 					modules = new ArrayList<String>();
 					modules.add("*");
 				} else {
-					modules = JsonUtils.convertJsonStringToList(voAdmin.getModules(), ArrayList.class, String.class);
+					modules = JsonUtils.convertJsonStringToList(voAdmin.getModules());
 				}
-				result = saveAdminstratorAccess(voAdmin.getaID(), modules);
+				if(modules != null && modules.size() > 0) {
+					result = saveAdminstratorAccess(voAdmin.getaID(), modules);
+				}
 			}
 		}
 		return result;
@@ -172,6 +174,19 @@ public class AdminServiceImpl implements AdminService {
 		param.put("modules", modules);
 		administratorModel.deleteAdministratorAccess(param);
 		return 1;
+	}
+
+	@Override
+	public int deleteAdministrator(Object[] idArray) {
+		if(idArray != null && idArray.length > 0) {
+			for (Object element : idArray) {
+				int id = Integer.parseInt(String.valueOf(element));
+				administratorModel.deleteAdministratorAccessById(id);
+				administratorModel.deleteAdministrator(id);
+			}
+			return 1;
+		}
+		return -1;
 	}
 
 }
