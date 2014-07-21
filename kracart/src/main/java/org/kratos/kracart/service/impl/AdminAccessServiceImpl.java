@@ -1,6 +1,7 @@
 package org.kratos.kracart.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -92,6 +93,9 @@ public class AdminAccessServiceImpl implements AdminAccessService {
 					module = MODULE_DIR + "." + CommonUtils.ucFirst(module);
 				}
 				BaseAccess access = (BaseAccess) Class.forName(module).newInstance();
+				if(!access.getEnabled()) {
+					continue;
+				}
 				access.setTitle(bundle.getString("access_" + access.getModule() + "_title"));
 				String group = access.getGroup();
 				AdminAccessLevel item = new AdminAccessLevel();
@@ -119,6 +123,12 @@ public class AdminAccessServiceImpl implements AdminAccessService {
 				e.printStackTrace();
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
+			}
+		}
+		if(levels.size() > 0) {
+			Collections.sort(levels, AdminAccessLevel.getAdminAccessLevel());
+			for (AdminAccessLevel level : levels) {
+				Collections.sort(level.getModules(), BaseAccess.getBaseAccessComparator());
 			}
 		}
 		return levels;

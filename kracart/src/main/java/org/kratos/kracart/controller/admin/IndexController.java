@@ -3,7 +3,6 @@ package org.kratos.kracart.controller.admin;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -44,8 +43,7 @@ public class IndexController extends CommonController {
 			data.put("pageSize", configurationService.getConfigurationValue(ConfigConstant.KEY_MAX_DISPLAY_SEARCH_RESULTS));
 			desktopService.loadDesktopConstants(data);
 			desktopService.loadLanguages(data, (List<Language>) request.getAttribute("langs"));
-			ResourceBundle desktopBundle = ResourceBundle.getBundle("messages_desktop", getLocale(request));
-			desktopService.loadLanguageDefinition(data, desktopBundle);
+			desktopService.loadLanguageDefinition(data, getResourceBundle("desktop", request));
 		} else {
 			return new ModelAndView("redirect:/admin/login");
 		}
@@ -65,9 +63,8 @@ public class IndexController extends CommonController {
 		data.put("styles", desktopService.getStyles());
 		
 		String path = request.getContextPath();
-		ResourceBundle accessBundle = ResourceBundle.getBundle("messages_access", getLocale(request));
 		adminAccessService.setUserName(admin.getName());
-		adminAccessService.setResouceBundle(accessBundle);
+		adminAccessService.setResouceBundle(getResourceBundle("access", request));
 		adminAccessService.setContextPath(path);
 		adminAccessService.initialize();
 		data.put("modules", adminAccessService.getModuleObjects());

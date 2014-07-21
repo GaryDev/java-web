@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -57,8 +56,7 @@ public class AdministratorsController extends CommonController {
 				@RequestParam(defaultValue="", required=false) String global,
 				HttpServletRequest request) {
 		List<AdminModuleParent> response = new ArrayList<AdminModuleParent>();
-		ResourceBundle bundle = ResourceBundle.getBundle("messages_access", getLocale(request));
-		adminAccessService.setResouceBundle(bundle);
+		adminAccessService.setResouceBundle(getResourceBundle("access", request));
 		int id = StringUtils.hasLength(aID) ? Integer.parseInt(aID) : 0;
 		if(id > 0) {
 			Administrator admin = adminService.getAdministratorById(id);

@@ -10,6 +10,7 @@ public class ServerInfo extends BaseAccess {
 		group = "tools";
 		icon = "server_info.png";
 		sortOrder = 1200;
+		enabled = false;
 	}
 
 }

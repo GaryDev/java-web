@@ -19,11 +19,12 @@
 	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
 		<property name="basenames">
 			<list>
-				<value>messages</value>
-				<value>messages_login</value>
-				<value>messages_desktop</value>
-				<value>messages_access</value>
-				<value>messages_administrators</value>
+				<value>/lang/messages</value>
+				<value>/lang/access/messages</value>
+				<value>/lang/administrators/messages</value>
+				<value>/lang/desktop/messages</value>
+				<value>/lang/images/messages</value>
+				<value>/lang/login/messages</value>
 			</list>
 		</property>
     </bean>
