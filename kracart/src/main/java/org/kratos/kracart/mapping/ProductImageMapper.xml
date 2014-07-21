@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.kratos.kracart.model.ProductImageModel">
+	<resultMap type="ProductImageGroup" id="rmImageGroup">
+		<id property="id" column="id" />
+		<result property="title" column="title" />
+		<result property="code" column="code" />
+		<result property="sizeWidth" column="size_width" />
+		<result property="sizeHeight" column="size_height" />
+	</resultMap>
+	
+	<resultMap type="ProductImage" id="rmImage">
+		<id property="id" column="id" />
+		<result property="image" column="image" />
+	</resultMap>
+	
+	<select id="getImageGroups" parameterType="int" resultMap="rmImageGroup">
+		select id, title, code, size_width, size_height
+		  from toc_products_images_groups
+		 where language_id = #{langId}
+	</select>
+	
+	<select id="getImages" resultMap="rmImage">
+		select id, image
+		  from toc_products_images
+	</select>
+
+</mapper>

@@ -3,8 +3,10 @@ package org.kratos.kracart.controller;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
+import org.kratos.kracart.entity.Language;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.support.RequestContextUtils;
@@ -27,12 +29,20 @@ public class CommonController {
 		return RequestContextUtils.getWebApplicationContext(request);
 	}
 	
+	protected ServletContext getServletContext(HttpServletRequest request) {
+		return getContext(request).getServletContext();
+	}
+	
 	protected ResourceBundle getResourceBundle(String code, HttpServletRequest request) {
 		String path = "lang.";
 		if(StringUtils.hasLength(code)) {
 			path += code + ".";
 		}
 		return ResourceBundle.getBundle(path + "messages", getLocale(request));
+	}
+	
+	protected Language getCurrentLanguage(HttpServletRequest request) {
+		return (Language) request.getAttribute("lang");
 	}
 
 }

@@ -28,4 +28,14 @@ public class ImagesController extends CommonController {
 		return response;
 	}
 	
+	@RequestMapping("/admin/images/check-images")
+	@ResponseBody
+	public Map<String, Object> checkImages(HttpServletRequest request) {
+		String root = getServletContext(request).getRealPath("/");
+		int languageId = getCurrentLanguage(request).getId();
+		Map<String, Object> response = new HashMap<String, Object>();
+		response.put(DesktopConstant.EXT_JSON_READER_ROOT, imageService.countImages(root, languageId));
+		return response;
+	}
+	
 }
