@@ -1,15 +1,15 @@
 package org.kratos.kracart.vo;
 
-public class ImageVO {
+public class ImageToolVO {
 
 	private String module;
 	private String run;
 	
-	public ImageVO() {
+	public ImageToolVO() {
 		
 	}
 	
-	public ImageVO(String module, String run) {
+	public ImageToolVO(String module, String run) {
 		this.module = module;
 		this.run = run;
 	}

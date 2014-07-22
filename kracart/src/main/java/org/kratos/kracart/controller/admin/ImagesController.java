@@ -38,4 +38,20 @@ public class ImagesController extends CommonController {
 		return response;
 	}
 	
+	@RequestMapping("/admin/images/get-imagegroups")
+	@ResponseBody
+	public Map<String, Object> getImageGroups(HttpServletRequest request) {
+		int languageId = getCurrentLanguage(request).getId();
+		Map<String, Object> response = new HashMap<String, Object>();
+		response.put(DesktopConstant.EXT_JSON_READER_ROOT, imageService.getProductImageGroup(languageId));
+		return response;
+	}
+	
+	@RequestMapping("/admin/images/list-imagesresize-result")
+	@ResponseBody
+	public Map<String, Object> listImageResizeResult(HttpServletRequest request) {
+		Map<String, Object> response = new HashMap<String, Object>();
+		response.put(DesktopConstant.EXT_JSON_READER_ROOT, null);
+		return response;
+	}
 }
