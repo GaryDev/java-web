@@ -1,6 +1,7 @@
 package org.kratos.kracart.controller.admin;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -8,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.kratos.kracart.controller.CommonController;
 import org.kratos.kracart.core.config.DesktopConstant;
 import org.kratos.kracart.service.ImageService;
+import org.kratos.kracart.utility.JsonUtils;
+import org.kratos.kracart.vo.ImageCounterVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,9 +52,11 @@ public class ImagesController extends CommonController {
 	
 	@RequestMapping("/admin/images/list-imagesresize-result")
 	@ResponseBody
-	public Map<String, Object> listImageResizeResult(HttpServletRequest request) {
-		Map<String, Object> response = new HashMap<String, Object>();
-		response.put(DesktopConstant.EXT_JSON_READER_ROOT, null);
+	public List<ImageCounterVO> listImageResizeResult(String groups, String overwrite, HttpServletRequest request) {
+		List<String> groupList = JsonUtils.convertJsonStringToList(groups);
+		String root = getServletContext(request).getRealPath("/");
+		int languageId = getCurrentLanguage(request).getId();
+		List<ImageCounterVO> response = imageService.resizeImages(groupList, "1".equals(overwrite), root, languageId);
 		return response;
 	}
 }

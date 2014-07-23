@@ -107,6 +107,7 @@ Ext.define('Toc.images.ImagesResizeDialog', {
         proxy: {
           type: 'ajax',
           url : '${ctx}/admin/images/list-imagesresize-result',
+          conn: { timeout: 600000 },
           extraParams: {
             overwrite: overwrite,
             groups: groups

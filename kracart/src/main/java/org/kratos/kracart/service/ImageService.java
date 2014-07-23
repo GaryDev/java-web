@@ -12,4 +12,5 @@ public interface ImageService {
 	public List<ImageToolVO> getImageList(ResourceBundle bundle);
 	public List<ImageCounterVO> countImages(String rootPath, int languageId);
 	public  List<ImageGroupVO> getProductImageGroup(int languageId);
+	public List<ImageCounterVO> resizeImages(List<String> groups, boolean overwrite, String rootPath, int languageId);
 }

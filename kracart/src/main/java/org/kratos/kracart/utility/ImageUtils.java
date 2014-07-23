@@ -44,7 +44,7 @@ public abstract class ImageUtils {
 		return true;
 	}
 
-	public static void resizeImage(String fromFileStr, String saveToFileStr,
+	public static boolean resizeImage(String fromFileStr, String saveToFileStr,
 			int width, int height, boolean equalProportion) throws Exception {
 		BufferedImage srcImage;
 		String imgType = "JPEG";
@@ -57,7 +57,7 @@ public abstract class ImageUtils {
 		if (width > 0 || height > 0) {
 			srcImage = resize(srcImage, width, height, equalProportion);
 		}
-		ImageIO.write(srcImage, imgType, saveFile);
+		return ImageIO.write(srcImage, imgType, saveFile);
 	}
 
 	public static BufferedImage resize(BufferedImage source, int targetW,
