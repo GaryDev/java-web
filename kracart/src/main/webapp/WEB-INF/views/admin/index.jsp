@@ -41,6 +41,11 @@
     TocLanguage = <c:out value="${jsonLangDef}" escapeXml="false"></c:out>;
     
     Ext.BLANK_IMAGE_URL = '${ctx}/templates/base/web/images/s.gif';
+    
+    Ext.Ajax.timeout= 300000; // 300 seconds
+    Ext.override(Ext.form.Basic, { timeout: Ext.Ajax.timeout / 1000 });
+    Ext.override(Ext.data.proxy.Server, { timeout: Ext.Ajax.timeout * 2 });
+    Ext.override(Ext.data.Connection, { timeout: Ext.Ajax.timeout });
   </script>
 
   <!-- TOC DESKTOP JS LIBRARY -->
