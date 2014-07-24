@@ -1,7 +1,7 @@
 package org.kratos.kracart.vo;
 
 public class ImageGroupVO {
-
+	
 	private int id;
 	private String text;
 	
@@ -17,4 +17,5 @@ public class ImageGroupVO {
 	public void setText(String text) {
 		this.text = text;
 	}
+
 }

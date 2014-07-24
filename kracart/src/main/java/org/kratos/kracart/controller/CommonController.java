@@ -7,11 +7,16 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import org.kratos.kracart.entity.Language;
+import org.kratos.kracart.service.ConfigurationService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 public class CommonController {
+	
+	@Autowired
+	protected ConfigurationService configurationService;
 	
 	protected String getMessage(HttpServletRequest request, String code) {
 		return getMessage(request, code, null);

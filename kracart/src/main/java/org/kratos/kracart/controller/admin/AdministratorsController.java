@@ -14,7 +14,6 @@ import org.kratos.kracart.core.config.DesktopConstant;
 import org.kratos.kracart.entity.Administrator;
 import org.kratos.kracart.service.AdminAccessService;
 import org.kratos.kracart.service.AdminService;
-import org.kratos.kracart.service.ConfigurationService;
 import org.kratos.kracart.utility.JsonUtils;
 import org.kratos.kracart.vo.AdministratorVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +30,6 @@ public class AdministratorsController extends CommonController {
 	private AdminService adminService;
 	@Autowired
 	private AdminAccessService adminAccessService;
-	@Autowired
-	private ConfigurationService configurationService;
 	
 	@RequestMapping("/admin/administrators/list-administrators")
 	@ResponseBody
