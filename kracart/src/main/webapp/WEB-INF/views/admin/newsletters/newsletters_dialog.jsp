@@ -39,11 +39,11 @@ Ext.define('Toc.newsletters.NewslettersDialog', {
     this.callParent([config]);
   },
   
-  show: function (newslettersId) {
-    this.newslettersId = newslettersId || null;
+  show: function (newsletterId) {
+    this.newsletterId = newsletterId || null;
     
-    if (this.newslettersId > 0) {
-      this.frmNewsletter.form.baseParams['newsletters_id'] = this.newslettersId;
+    if (this.newsletterId > 0) {
+      this.frmNewsletter.form.baseParams['newsletterId'] = this.newsletterId;
       
       this.frmNewsletter.load({
         url: '${ctx}/admin/newsletters/load-newsletter',

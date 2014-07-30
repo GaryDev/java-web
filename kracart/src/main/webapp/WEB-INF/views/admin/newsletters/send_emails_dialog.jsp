@@ -39,8 +39,8 @@ Ext.define('Toc.newsletters.SendEmailsDialog', {
     this.callParent([config]);
   },
   
-  show: function (newslettersId) {
-    this.newslettersId = newslettersId || null;
+  show: function (newsletterId) {
+    this.newsletterId = newsletterId || null;
     
     this.callParent();
   },
@@ -63,7 +63,7 @@ Ext.define('Toc.newsletters.SendEmailsDialog', {
     Ext.Ajax.request({
       url: '${ctx}/admin/newsletters/send-emails',
       params: {
-        newsletters_id: this.newslettersId,
+        newsletterId: this.newsletterId,
         batch: batch
       },
       callback: function(options, success, response) {
@@ -95,7 +95,7 @@ Ext.define('Toc.newsletters.SendEmailsDialog', {
     Ext.Ajax.request({
       url: '${ctx}/admin/newsletters/get-emails-confirmation',
       params: {
-        newsletters_id: this.newslettersId,
+        newsletterId: this.newsletterId,
         batch: batch
       },
       callback: function(options, success, response) {

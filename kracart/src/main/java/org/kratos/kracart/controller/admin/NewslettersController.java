@@ -1,6 +1,7 @@
 package org.kratos.kracart.controller.admin;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -8,7 +9,10 @@ import javax.servlet.http.HttpServletRequest;
 import org.kratos.kracart.controller.CommonController;
 import org.kratos.kracart.core.config.ConfigConstant;
 import org.kratos.kracart.core.config.DesktopConstant;
+import org.kratos.kracart.entity.Customer;
+import org.kratos.kracart.entity.Newsletter;
 import org.kratos.kracart.service.NewsletterService;
+import org.kratos.kracart.utility.JsonUtils;
 import org.kratos.kracart.vo.NewsletterVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -49,8 +53,88 @@ public class NewslettersController extends CommonController {
 	
 	@RequestMapping("/admin/newsletters/save-newsletter")
 	@ResponseBody
-	public Map<String, Object> save(NewsletterVO data, HttpServletRequest request) {
+	public Map<String, Object> saveNewsletter(NewsletterVO data, HttpServletRequest request) {
 		boolean success = newsletterService.saveNewsletter(data);
+		String feedback = success ? getMessage(request, "ms_success_action_performed") : getMessage(request, "ms_error_action_not_performed");
+		Map<String, Object> response = new HashMap<String, Object>();
+		response.put("success", success);
+		response.put("feedback", feedback);
+		return response;
+	}
+	
+	@RequestMapping("/admin/newsletters/load-newsletter")
+	@ResponseBody
+	public Map<String, Object> loadNewsletter(String newsletterId, HttpServletRequest request) {
+		int id = StringUtils.hasLength(newsletterId) ? Integer.parseInt(newsletterId) : 0;
+		Newsletter data = newsletterService.loadNewsletter(id);
+		boolean success = (data != null);
+		Map<String, Object> response = new HashMap<String, Object>();
+		response.put("success", success);
+		response.put("data", data);
+		return response;
+	}
+	
+	@RequestMapping("/admin/newsletters/get-newsletters-confirmation")
+	@ResponseBody
+	public Map<String, Object> getNewslettersConfirmation(String newsletterId, HttpServletRequest request) {
+		int id = StringUtils.hasLength(newsletterId) ? Integer.parseInt(newsletterId) : 0;
+		Newsletter email = newsletterService.loadNewsletter(id);
+		List<Customer> recipients = newsletterService.getNewsletterRecipients(id);
+		String totalMessage = getMessage(request, "newsletter_newsletter_total_recipients", new Object[]{ recipients.size() });
+		String confirmation = newsletterService.buildConfirmationMessage(email, totalMessage);
+		Map<String, Object> response = new HashMap<String, Object>();
+		response.put("success", true);
+		response.put("execute", recipients.size() > 0);
+		response.put("confirmation", confirmation);
+		return response;
+	}
+	
+	@RequestMapping("/admin/newsletters/get-emails-confirmation")
+	@ResponseBody
+	public Map<String, Object> getEmailsConfirmation(String newsletterId, String batch, HttpServletRequest request) {
+		int id = StringUtils.hasLength(newsletterId) ? Integer.parseInt(newsletterId) : 0;
+		List<String> customerId = JsonUtils.convertJsonStringToList(batch);
+		String confirmation = "";
+		if(customerId.size() > 0) {
+			Newsletter email = newsletterService.loadNewsletter(id);
+			List<Customer> customers = newsletterService.getEmailRecipients(id, customerId);
+			String totalMessage = getMessage(request, "newsletter_newsletter_total_recipients", new Object[]{ customers.size() });
+			confirmation = newsletterService.buildConfirmationMessage(email, totalMessage);
+		}
+		Map<String, Object> response = new HashMap<String, Object>();
+		response.put("success", true);
+		response.put("confirmation", confirmation);
+		return response;
+	}
+	
+	@RequestMapping("/admin/newsletters/get-emails-audience")
+	@ResponseBody
+	public Map<String, Object> getEmailsAudience(HttpServletRequest request) {
+		Map<String, Object> response = new HashMap<String, Object>();
+		response.put(DesktopConstant.EXT_JSON_READER_ROOT, 
+				newsletterService.getEmailsAudience(getResourceBundle("newsletters", request)));
+		return response;
+	}
+	
+	@RequestMapping("/admin/newsletters/send-newsletters")
+	@ResponseBody
+	public Map<String, Object> sendNewsletters(String newsletterId, HttpServletRequest request) {
+		return sendAction(newsletterId, null, request);
+	}
+	
+	@RequestMapping("/admin/newsletters/send-emails")
+	@ResponseBody
+	public Map<String, Object> sendEmails(String newsletterId, String batch, HttpServletRequest request) {
+		return sendAction(newsletterId, batch, request);
+	}
+	
+	private Map<String, Object> sendAction(String newsletterId, String batch, HttpServletRequest request) {
+		int id = StringUtils.hasLength(newsletterId) ? Integer.parseInt(newsletterId) : 0;
+		List<String> customerId = null;
+		if(StringUtils.hasLength(batch)) {
+			customerId = JsonUtils.convertJsonStringToList(batch);
+		}
+		boolean success = newsletterService.sendEmails(id, customerId);
 		String feedback = success ? getMessage(request, "ms_success_action_performed") : getMessage(request, "ms_error_action_not_performed");
 		Map<String, Object> response = new HashMap<String, Object>();
 		response.put("success", success);

@@ -15,13 +15,22 @@
 		<result property="locked" column="locked" />
 	</resultMap>	
 	
-	<select id="getNewsletters" parameterType="map" resultMap="rmNewsletter">
+	<sql id="selectNewsletter">
 		select newsletters_id, title, content, module, date_added, date_sent, status, locked
 		  from toc_newsletters
+	</sql>
+	
+	<select id="getNewsletters" parameterType="map" resultMap="rmNewsletter">
+		<include refid="selectNewsletter"/>
 		 order by date_added desc
 		 <if test="start != null and limit != null">
 		 	limit #{start}, #{limit}
 		 </if>
+	</select>
+	
+	<select id="getNewsletterById" parameterType="int" resultMap="rmNewsletter">
+		<include refid="selectNewsletter"/>
+		where newsletters_id = #{id}
 	</select>
 	
 	<update id="updateNewsletter" parameterType="Newsletter">
@@ -41,6 +50,11 @@
 		keyColumn="newsletters_id" keyProperty="id" useGeneratedKeys="true">
 		insert into toc_newsletters (title, content, module, date_added, status)
 		values (#{title}, #{content}, #{module}, #{dateAdded}, #{status})		
+	</insert>
+	
+	<insert id="insertNewsletterLog" parameterType="NewsletterLog">
+		insert into toc_newsletters_log (newsletters_id, email_address, date_sent)
+		values (#{id}, #{email}, #{dateSent})
 	</insert>
 	
 </mapper>

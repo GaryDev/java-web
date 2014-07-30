@@ -124,7 +124,7 @@ Ext.define('Toc.newsletters.NewslettersGrid', {
   },
   
   onDelete: function(record) {
-    var newslettersId = record.get('newslettersId');
+    var newsletterId = record.get('newsletterId');
     
     Ext.MessageBox.confirm(
       TocLanguage.msgWarningTitle, 
@@ -135,7 +135,7 @@ Ext.define('Toc.newsletters.NewslettersGrid', {
             waitMsg: TocLanguage.formSubmitWaitMsg,
             url: '${ctx}/admin/newsletters/delete-newsletter',
             params: {
-              newslettersId: newslettersId
+              newsletterId: newsletterId
             },
             callback: function (options, success, response) {
               var result = Ext.decode(response.responseText);
@@ -160,7 +160,7 @@ Ext.define('Toc.newsletters.NewslettersGrid', {
     
     keys = [];
     Ext.each(selections, function(item) {
-      keys.push(item.get('newslettersId'));
+      keys.push(item.get('newsletterId'));
     });
     
     if (keys.length > 0) {
@@ -201,15 +201,15 @@ Ext.define('Toc.newsletters.NewslettersGrid', {
   
   onSendEmails: function(record) {
     var module = record.get('module');
-    var newslettersId = record.get('newslettersId');
+    var newsletterId = record.get('newsletterId');
     
     switch(module) {
       case 'email':
-        this.fireEvent('sendemails', newslettersId);
+        this.fireEvent('sendemails', newsletterId);
         break;
       
       case 'newsletter':
-        this.fireEvent('sendnewsletters', newslettersId); 
+        this.fireEvent('sendnewsletters', newsletterId); 
         break;
     }
   },

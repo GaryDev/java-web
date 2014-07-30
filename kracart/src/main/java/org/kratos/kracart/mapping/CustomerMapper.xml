@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.kratos.kracart.model.CustomerModel">
+	
+	<resultMap type="Customer" id="rmCustomer">
+		<id property="id" column="customers_id" />
+		<result property="firstName" column="customers_firstname" />
+		<result property="lastName" column="customers_lastname" />
+		<result property="email" column="customers_email_address" />
+	</resultMap>	
+	
+	<select id="getCustomers" resultMap="rmCustomer">
+		select customers_id, customers_firstname, customers_lastname, customers_email_address
+		  from toc_customers
+		 order by customers_lastname
+	</select>
+	
+	<select id="queryRecipients" parameterType="map" resultMap="rmCustomer">
+		select c.customers_id, c.customers_firstname, c.customers_lastname, c.customers_email_address
+		  from toc_customers c
+		  left join toc_newsletters_log nl 
+		    on c.customers_email_address = nl.email_address
+		   and nl.newsletters_id = #{id}
+		 where nl.email_address is null
+		   <if test="newsletter != null">
+		   	and c.customers_newsletter = '1'
+		   </if>
+		   <if test="customers != null">
+		   	and c.customers_id in
+		   	<foreach collection="customers" index="index" item="item" open="(" separator="," close=")">
+	            #{item}
+	        </foreach>
+		   </if>
+	</select>
+	
+</mapper>

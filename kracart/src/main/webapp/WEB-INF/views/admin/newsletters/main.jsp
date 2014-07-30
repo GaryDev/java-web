@@ -40,9 +40,9 @@ Ext.override(Toc.desktop.NewslettersWindow, {
     grd.on('notifysuccess', this.onShowNotification, this);
     grd.on('create', function() {this.onCreateNewsletters(grd);}, this);
     grd.on('edit', function(record) {this.onEditNewsletters(grd, record);}, this);
-    grd.on('sendemails', function(newslettersId) {this.onSendEmails(grd, newslettersId);}, this);
+    grd.on('sendemails', function(newsletterId) {this.onSendEmails(grd, newsletterId);}, this);
     grd.on('log', this.onLog, this);
-    grd.on('sendnewsletters', function(newslettersId) {this.onSendNewsletters(grd, newslettersId);}, this);
+    grd.on('sendnewsletters', function(newsletterId) {this.onSendNewsletters(grd, newsletterId);}, this);
   },
   
   onCreateNewsletters: function(grd) {
@@ -59,29 +59,29 @@ Ext.override(Toc.desktop.NewslettersWindow, {
     
     this.onSaveSuccess(dlg, grd);
     
-    dlg.show(record.get('newsletters_id'));
+    dlg.show(record.get('newsletterId'));
   },
   
-  onSendEmails: function(grd, newslettersId) {
+  onSendEmails: function(grd, newsletterId) {
     var dlg = this.createSendEmailsDialog();
     
     this.onSendSuccess(dlg, grd);
     
-    dlg.show(newslettersId);
+    dlg.show(newsletterId);
   },
   
-  onSendNewsletters: function(grd, newslettersId) {
+  onSendNewsletters: function(grd, newsletterId) {
     var dlg = this.createSendNewslettersDialog();
     
     this.onSendSuccess(dlg, grd);
     
-    dlg.show(newslettersId);
+    dlg.show(newsletterId);
   },
   
   onLog: function(record) {
     var dlg = this.createLogDialog();
     
-    dlg.show(record.get('newsletters_id'));
+    dlg.show(record.get('newsletterId'));
   },  
   
   createSendEmailsDialog: function() {

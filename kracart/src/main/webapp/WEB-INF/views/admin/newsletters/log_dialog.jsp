@@ -31,8 +31,8 @@ Ext.define('Toc.newsletters.LogDialog', {
     this.callParent([config]);
   },
   
-  show: function(newslettersId) {
-    this.grdLog.getStore().getProxy().extraParams['newsletters_id'] = newslettersId;
+  show: function(newsletterId) {
+    this.grdLog.getStore().getProxy().extraParams['newsletterId'] = newsletterId;
     this.grdLog.getStore().load();
      
     this.callParent();

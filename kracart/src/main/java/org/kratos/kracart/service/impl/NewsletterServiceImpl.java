@@ -7,21 +7,36 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import javax.mail.internet.MimeMessage;
+
+import org.kratos.kracart.entity.Customer;
 import org.kratos.kracart.entity.Newsletter;
+import org.kratos.kracart.entity.NewsletterLog;
+import org.kratos.kracart.model.CustomerModel;
 import org.kratos.kracart.model.NewsletterModel;
 import org.kratos.kracart.service.NewsletterService;
 import org.kratos.kracart.utility.HtmlOutputUtils;
+import org.kratos.kracart.utility.ValidatorUtils;
 import org.kratos.kracart.vo.BasicVO;
 import org.kratos.kracart.vo.NewsletterVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service("newsletterService")
+@Transactional
 public class NewsletterServiceImpl implements NewsletterService {
 	
 	@Autowired
 	private NewsletterModel newsletterModel;
+	@Autowired
+	private CustomerModel customerModel;
+	@Autowired
+	private JavaMailSender javaMailSender;
 	
+	@Override
 	public List<NewsletterVO> getNewsletters(String contextName, String start, String limit) {
 		List<NewsletterVO> newsletters = new ArrayList<NewsletterVO>();
 		Map<String, Object> criteria = new HashMap<String, Object>();
@@ -46,6 +61,7 @@ public class NewsletterServiceImpl implements NewsletterService {
 		return newsletters;
 	}
 	
+	@Override
 	public int getTotal() {
 		return getNewsletters("", null, null).size();
 	}
@@ -83,5 +99,122 @@ public class NewsletterServiceImpl implements NewsletterService {
 		}
 		return true;
 	}
-
+	
+	@Override
+	public Newsletter loadNewsletter(int newsletterId) {
+		return newsletterModel.getNewsletterById(newsletterId);
+	}
+	
+	@Override
+	public List<Customer> getNewsletterRecipients(int newsletterId) {
+		Map<String, Object> criteria = new HashMap<String, Object>();
+		criteria.put("id", newsletterId);
+		criteria.put("newsletter", "1");
+		criteria.put("customers", null);
+		return customerModel.queryRecipients(criteria);
+	}
+	
+	@Override
+	public List<Customer> getEmailRecipients(int newsletterId, List<String> customerId) {
+		Map<String, Object> criteria = new HashMap<String, Object>();
+		criteria.put("id", newsletterId);
+		criteria.put("newsletter", null);
+		if(!customerId.contains("***")) {
+			criteria.put("customers", customerId);
+		} else {
+			criteria.put("customers", null);
+		}
+		return customerModel.queryRecipients(criteria);
+	}
+	
+	@Override
+	public String buildConfirmationMessage(Newsletter email, String totalMessage) {
+		StringBuilder confirmation = new StringBuilder();
+		confirmation.append("<p style=\"margin: 10px;\"><font color=\"#ff0000\"><b>");
+		confirmation.append(totalMessage);
+		confirmation.append("</b></font></p>");
+		confirmation.append("<p style=\"margin: 10px;\"><b>");
+		confirmation.append(email.getTitle());
+		confirmation.append("</b></p>");
+		confirmation.append("<p style=\"margin: 10px;\">");
+		confirmation.append(email.getContent());
+		confirmation.append("</p>");
+		return confirmation.toString();
+	}
+	
+	@Override
+	public List<BasicVO> getEmailsAudience(ResourceBundle bundle) {
+		List<BasicVO> audience = new ArrayList<BasicVO>();
+		audience.add(new BasicVO("***", bundle.getString("newsletter_email_all_customers")));
+		List<Customer> customers = customerModel.getCustomers();
+		for (Customer customer : customers) {
+			String id = String.valueOf(customer.getId());
+			String text = customer.getLastName() + ", " + customer.getFirstName() + " (" + customer.getEmail() + ")";
+			audience.add(new BasicVO(id, text));
+		}
+		return audience;
+	}
+	
+	@Override
+	public boolean sendEmails(int newsletterId, List<String> customerId) {
+		Newsletter email = newsletterModel.getNewsletterById(newsletterId);
+		List<Customer> customers = null;
+		if(customerId == null) {
+			customers = getNewsletterRecipients(newsletterId);
+		} else {
+			customers = getEmailRecipients(newsletterId, customerId);
+		}
+		return doSend(email, customers);
+	}
+	
+	private boolean doSend(Newsletter email, List<Customer> customers) {
+		List<String> recipients = new ArrayList<String>();
+		if(customers != null && customers.size() > 0) {
+			for (Customer customer : customers) {
+				String address = customer.getEmail();
+				if(ValidatorUtils.validateEmail(address)) {
+					recipients.add(address);
+				}
+			}
+			if(sendEmail(email, recipients)) {
+				modifyNewsletter(email.getId(), recipients);
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private boolean sendEmail(Newsletter email, List<String> recipients) {
+		boolean result = false;
+		String[] mailTo = recipients.toArray(new String[0]);
+		try {
+			MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+			MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, false, "UTF-8");
+			messageHelper.setTo(mailTo);
+			//messageHelper.setFrom(mailFrom);
+			messageHelper.setSubject(email.getTitle());
+			messageHelper.setText(email.getContent(), true);
+			javaMailSender.send(mimeMessage);
+			result = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			result = false;
+		}
+		return result;
+	}
+	
+	private void modifyNewsletter(int newsletterId, List<String> recipients) {
+		Timestamp date = new Timestamp(new java.util.Date().getTime());
+		for (String recipient : recipients) {
+			NewsletterLog log = new NewsletterLog(newsletterId, recipient);
+			log.setDateSent(date);
+			newsletterModel.insertNewsletterLog(log);
+		}
+		Newsletter newsletter = new Newsletter();
+		newsletter.setId(newsletterId);
+		newsletter.setDateSent(date);
+		newsletter.setStatus(1);
+		newsletterModel.updateNewsletter(newsletter);
+	}
+	
 }

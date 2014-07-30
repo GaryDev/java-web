@@ -11,7 +11,6 @@ import org.kratos.kracart.core.email.tpl.TplAdminPasswordForgotten;
 import org.kratos.kracart.entity.Administrator;
 import org.kratos.kracart.entity.AdministratorAccess;
 import org.kratos.kracart.model.AdministratorModel;
-import org.kratos.kracart.model.EmailTemplateModel;
 import org.kratos.kracart.service.AdminService;
 import org.kratos.kracart.utility.CommonUtils;
 import org.kratos.kracart.utility.JsonUtils;
@@ -28,8 +27,6 @@ public class AdminServiceImpl implements AdminService {
 	
 	@Autowired
 	private AdministratorModel administratorModel;
-	@Autowired
-	private EmailTemplateModel emailTemplateModel;
 	@Autowired
 	private KRAEmailTemplate template;
 

@@ -41,13 +41,13 @@ Ext.define('Toc.newsletters.SendNewslettersDialog', {
     this.callParent([config]);
   },
   
-  show: function (newslettersId) {
-    this.newslettersId = newslettersId;
+  show: function (newsletterId) {
+    this.newsletterId = newsletterId;
     
     Ext.Ajax.request({
       url: '${ctx}/admin/newsletters/get-newsletters-confirmation',
       params: {
-        newsletters_id: this.newslettersId
+        newsletterId: this.newsletterId
       },
       callback: function(options, success, response) {
         var result = Ext.decode(response.responseText);
@@ -78,7 +78,7 @@ Ext.define('Toc.newsletters.SendNewslettersDialog', {
     Ext.Ajax.request({
       url: '${ctx}/admin/newsletters/send-newsletters',
       params: {
-        newsletters_id: this.newslettersId
+        newsletterId: this.newsletterId
       },
       callback: function(options, success, response) {
         var result = Ext.decode(response.responseText);
