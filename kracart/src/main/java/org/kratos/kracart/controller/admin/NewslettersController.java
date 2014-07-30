@@ -42,6 +42,23 @@ public class NewslettersController extends CommonController {
 		return response;
 	}
 	
+	@RequestMapping("/admin/newsletters/list-log")
+	@ResponseBody
+	public Map<String, Object> listNewsletterLogs(
+			@RequestParam(defaultValue="", required=false) String start, 
+			@RequestParam(defaultValue="", required=false) String limit, 
+			String newsletterId, HttpServletRequest request) {
+		
+		start = StringUtils.hasLength(start) ? start : "0";
+		limit = StringUtils.hasLength(limit) ? limit : configurationService.getConfigurationValue(ConfigConstant.KEY_MAX_DISPLAY_SEARCH_RESULTS);
+		int id = StringUtils.hasLength(newsletterId) ? Integer.parseInt(newsletterId) : 0;
+		String contextName = getServletContext(request).getServletContextName();
+		Map<String, Object> response = new HashMap<String, Object>();
+		response.put(DesktopConstant.EXT_JSON_READER_TOTAL, newsletterService.getTotalLogs(id));
+		response.put(DesktopConstant.EXT_JSON_READER_ROOT, newsletterService.getNewsletterLogs(contextName, id, start, limit));
+		return response;
+	}
+	
 	@RequestMapping("/admin/newsletters/get-modules")
 	@ResponseBody
 	public Map<String, Object> getModules(HttpServletRequest request) {

@@ -41,9 +41,9 @@ Ext.define('Toc.newsletters.LogDialog', {
   buildGrid: function() {
     var dsLog = Ext.create('Ext.data.Store', {
       fields:[
-        'email_address', 
-        'sent',
-        'date_sent'
+        'email', 
+        'sentIcon',
+        'sentDate'
       ],
       pageSize: Toc.CONF.GRID_PAGE_SIZE,
       proxy: {
@@ -61,9 +61,9 @@ Ext.define('Toc.newsletters.LogDialog', {
       store: dsLog,
       border: false,
       columns: [
-        {header: '<spring:message code="table_heading_email_addresses"></spring:message>', dataIndex: 'email_address', flex: 1},
-        {header: '<spring:message code="table_heading_sent"></spring:message>', width: 100, align: 'center', dataIndex: 'sent'},
-        {header: '<spring:message code="table_heading_date_sent"></spring:message>', width: 150, align: 'center', dataIndex: 'date_sent'},
+        {header: '<spring:message code="table_heading_email_addresses"></spring:message>', dataIndex: 'email', flex: 1},
+        {header: '<spring:message code="table_heading_sent"></spring:message>', width: 100, align: 'center', dataIndex: 'sentIcon'},
+        {header: '<spring:message code="table_heading_date_sent"></spring:message>', width: 150, align: 'center', dataIndex: 'sentDate'},
       ],
       dockedItems: [{
         xtype: 'pagingtoolbar',

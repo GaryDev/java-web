@@ -1,6 +1,7 @@
 package org.kratos.kracart.service.impl;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +19,7 @@ import org.kratos.kracart.service.NewsletterService;
 import org.kratos.kracart.utility.HtmlOutputUtils;
 import org.kratos.kracart.utility.ValidatorUtils;
 import org.kratos.kracart.vo.BasicVO;
+import org.kratos.kracart.vo.NewsletterLogVO;
 import org.kratos.kracart.vo.NewsletterVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -64,6 +66,34 @@ public class NewsletterServiceImpl implements NewsletterService {
 	@Override
 	public int getTotal() {
 		return getNewsletters("", null, null).size();
+	}
+	
+	@Override
+	public List<NewsletterLogVO> getNewsletterLogs(String contextName, int newsletterId, String start, String limit) {
+		List<NewsletterLogVO> logs = new ArrayList<NewsletterLogVO>();
+		Map<String, Object> criteria = new HashMap<String, Object>();
+		criteria.put("id", newsletterId);
+		criteria.put("start", start == null ? null : Integer.parseInt(start));
+		criteria.put("limit", limit == null ? null : Integer.parseInt(limit));
+		List<NewsletterLog> logList = newsletterModel.getNewsletterLogs(criteria);
+		if(logList != null && logList.size() > 0) {
+			HtmlOutputUtils.setContextName(contextName);
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+			for (NewsletterLog log : logList) {
+				String sentIcon = log.getDateSent() != null ? HtmlOutputUtils.icon("checkbox_ticked.gif") : HtmlOutputUtils.icon("checkbox_crossed.gif");
+				NewsletterLogVO record = new NewsletterLogVO();
+				record.setEmail(log.getEmail());
+				record.setSentIcon(sentIcon);
+				record.setSentDate(dateFormat.format(log.getDateSent()));
+				logs.add(record);
+			}
+		}
+		return logs;
+	}
+	
+	@Override
+	public int getTotalLogs(int newsletterId) {
+		return getNewsletterLogs("", newsletterId, null, null).size();
 	}
 
 	@Override
