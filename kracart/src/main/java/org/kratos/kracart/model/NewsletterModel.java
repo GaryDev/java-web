@@ -14,4 +14,6 @@ public interface NewsletterModel {
 	public void updateNewsletter(Newsletter newsletter);
 	public void insertNewsletter(Newsletter newsletter);
 	public void insertNewsletterLog(NewsletterLog log);
+	public void deleteNewsletter(int newsletterId);
+	public void deleteNewsletterLog(int newsletterId);
 }

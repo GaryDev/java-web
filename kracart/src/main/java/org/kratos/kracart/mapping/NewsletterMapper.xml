@@ -56,12 +56,24 @@
 		insert into toc_newsletters (title, content, module, date_added, status)
 		values (#{title}, #{content}, #{module}, #{dateAdded}, #{status})		
 	</insert>
-	
+
+	<delete id="deleteNewsletter" parameterType="int">
+		delete
+		  from toc_newsletters
+		 where newsletters_id = #{id}
+	</delete>
+
 	<insert id="insertNewsletterLog" parameterType="NewsletterLog">
 		insert into toc_newsletters_log (newsletters_id, email_address, date_sent)
 		values (#{id}, #{email}, #{dateSent})
 	</insert>
-	
+
+	<delete id="deleteNewsletterLog" parameterType="int">
+		delete
+		  from toc_newsletters_log
+		 where newsletters_id = #{id}
+	</delete>
+
 	<select id="getNewsletterLogs" parameterType="map" resultMap="rmNewsletterLog">
 		select email_address, date_sent
 		  from toc_newsletters_log

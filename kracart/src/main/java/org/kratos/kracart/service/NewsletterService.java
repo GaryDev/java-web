@@ -19,6 +19,7 @@ public interface NewsletterService {
 	public List<BasicVO> getEmailsAudience(ResourceBundle bundle);
 	public boolean saveNewsletter(NewsletterVO data);
 	public Newsletter loadNewsletter(int newsletterId);
+	public int deleteNewsletter(String[] idArray);
 	public List<Customer> getNewsletterRecipients(int newsletterId);
 	public List<Customer> getEmailRecipients(int newsletterId, List<String> customerId);
 	public String buildConfirmationMessage(Newsletter email, String totalMessage);

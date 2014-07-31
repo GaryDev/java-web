@@ -91,6 +91,29 @@ public class NewslettersController extends CommonController {
 		return response;
 	}
 	
+	@RequestMapping("/admin/newsletters/delete-newsletter")
+	@ResponseBody
+	public Map<String, Object> delete(String newsletterId, HttpServletRequest request) {
+		return deleteNewsletterById(newsletterId, false, request);
+	}
+	
+	@RequestMapping("/admin/newsletters/delete-newsletters")
+	@ResponseBody
+	public Map<String, Object> deleteMultiple(String batch, HttpServletRequest request) {
+		return deleteNewsletterById(batch, true, request);
+	}
+	
+	private Map<String, Object> deleteNewsletterById(String id, boolean isJson, HttpServletRequest request) {
+		String[] idArray = isJson ? JsonUtils.convertJsonStringToList(id).toArray(new String[0]) : new String[] {id};
+		int result = newsletterService.deleteNewsletter(idArray);
+		boolean success = (result == 1);
+		String feedback = success ? getMessage(request, "ms_success_action_performed") : getMessage(request, "ms_error_action_not_performed");
+		Map<String, Object> response = new HashMap<String, Object>();
+		response.put("success", success);
+		response.put("feedback", feedback);
+		return response;
+	}
+	
 	@RequestMapping("/admin/newsletters/get-newsletters-confirmation")
 	@ResponseBody
 	public Map<String, Object> getNewslettersConfirmation(String newsletterId, HttpServletRequest request) {

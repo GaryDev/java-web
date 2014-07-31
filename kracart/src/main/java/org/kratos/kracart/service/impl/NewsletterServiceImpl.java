@@ -71,11 +71,7 @@ public class NewsletterServiceImpl implements NewsletterService {
 	@Override
 	public List<NewsletterLogVO> getNewsletterLogs(String contextName, int newsletterId, String start, String limit) {
 		List<NewsletterLogVO> logs = new ArrayList<NewsletterLogVO>();
-		Map<String, Object> criteria = new HashMap<String, Object>();
-		criteria.put("id", newsletterId);
-		criteria.put("start", start == null ? null : Integer.parseInt(start));
-		criteria.put("limit", limit == null ? null : Integer.parseInt(limit));
-		List<NewsletterLog> logList = newsletterModel.getNewsletterLogs(criteria);
+		List<NewsletterLog> logList = getNewsletterLogs(newsletterId, start, limit);
 		if(logList != null && logList.size() > 0) {
 			HtmlOutputUtils.setContextName(contextName);
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
@@ -91,9 +87,17 @@ public class NewsletterServiceImpl implements NewsletterService {
 		return logs;
 	}
 	
+	private List<NewsletterLog> getNewsletterLogs(int newsletterId, String start, String limit) {
+		Map<String, Object> criteria = new HashMap<String, Object>();
+		criteria.put("id", newsletterId);
+		criteria.put("start", start == null ? null : Integer.parseInt(start));
+		criteria.put("limit", limit == null ? null : Integer.parseInt(limit));
+		return newsletterModel.getNewsletterLogs(criteria);
+	}
+	
 	@Override
 	public int getTotalLogs(int newsletterId) {
-		return getNewsletterLogs("", newsletterId, null, null).size();
+		return getNewsletterLogs(newsletterId, null, null).size();
 	}
 
 	@Override
@@ -133,6 +137,21 @@ public class NewsletterServiceImpl implements NewsletterService {
 	@Override
 	public Newsletter loadNewsletter(int newsletterId) {
 		return newsletterModel.getNewsletterById(newsletterId);
+	}
+	
+	@Override
+	public int deleteNewsletter(String[] idArray) {
+		if(idArray != null && idArray.length > 0) {
+			for (String element : idArray) {
+				int id = Integer.parseInt(element);
+				newsletterModel.deleteNewsletter(id);
+				if(getTotalLogs(id) > 0) {
+					newsletterModel.deleteNewsletterLog(id);
+				}
+			}
+			return 1;
+		}
+		return 0;
 	}
 	
 	@Override
