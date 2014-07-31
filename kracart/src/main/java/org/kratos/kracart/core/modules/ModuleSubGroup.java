@@ -4,12 +4,19 @@ import java.util.Map;
 
 public class ModuleSubGroup {
 
+	private String id;
 	private String iconCls;
 	private String shortcutIconCls;
 	private String title;
 	private String identifier;
 	private Map<String, Object> params;
 	
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
 	public String getIconCls() {
 		return iconCls;
 	}

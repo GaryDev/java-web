@@ -200,6 +200,7 @@ public class AdminAccessServiceImpl implements AdminAccessService {
 					if(subGroupList != null && subGroupList.size() > 0) {
 						modules.add("new Toc.desktop." + module + "SubGroupWindow()");
 						for (ModuleSubGroup subGroup : subGroupList) {
+							subGroup.setTitle(bundle.getString("access_" + subGroup.getId() + "_title"));
 							modules.add("new Toc.desktop." + module + 
 								"Window({id: '" + subGroup.getIdentifier() + "', " +
 								"title: '" + subGroup.getTitle() + "', " +
