@@ -3,9 +3,9 @@ package org.kratos.kracart.service;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import org.kratos.kracart.vo.ImageCounterVO;
-import org.kratos.kracart.vo.ImageToolVO;
-import org.kratos.kracart.vo.ImageGroupVO;
+import org.kratos.kracart.vo.images.ImageCounterVO;
+import org.kratos.kracart.vo.images.ImageGroupVO;
+import org.kratos.kracart.vo.images.ImageToolVO;
 
 public interface ImageService {
 	

@@ -94,4 +94,8 @@ public class Language implements Serializable {
 		this.numericSepratorThousands = numericSepratorThousands;
 	}
 	
+	public String getWorldFlagUrl() {
+		return "background: url(././././../assets/images/worldflags/" + countryISO + ".png) no-repeat right center !important;";
+	}
+	
 }

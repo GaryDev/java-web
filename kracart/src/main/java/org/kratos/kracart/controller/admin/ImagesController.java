@@ -10,7 +10,7 @@ import org.kratos.kracart.controller.CommonController;
 import org.kratos.kracart.core.config.DesktopConstant;
 import org.kratos.kracart.service.ImageService;
 import org.kratos.kracart.utility.JsonUtils;
-import org.kratos.kracart.vo.ImageCounterVO;
+import org.kratos.kracart.vo.images.ImageCounterVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

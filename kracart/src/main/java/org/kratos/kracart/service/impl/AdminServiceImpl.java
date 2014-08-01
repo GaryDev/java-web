@@ -15,7 +15,7 @@ import org.kratos.kracart.service.AdminService;
 import org.kratos.kracart.utility.CommonUtils;
 import org.kratos.kracart.utility.JsonUtils;
 import org.kratos.kracart.utility.ValidatorUtils;
-import org.kratos.kracart.vo.AdministratorVO;
+import org.kratos.kracart.vo.administrators.AdministratorVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

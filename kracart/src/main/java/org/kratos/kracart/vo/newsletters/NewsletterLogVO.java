@@ -1,4 +1,4 @@
-package org.kratos.kracart.vo;
+package org.kratos.kracart.vo.newsletters;
 
 public class NewsletterLogVO {
 	

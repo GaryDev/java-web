@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.kratos.kracart.entity.Administrator;
-import org.kratos.kracart.vo.AdministratorVO;
+import org.kratos.kracart.vo.administrators.AdministratorVO;
 
 public interface AdminService {
 	

@@ -13,7 +13,7 @@ import org.kratos.kracart.entity.Customer;
 import org.kratos.kracart.entity.Newsletter;
 import org.kratos.kracart.service.NewsletterService;
 import org.kratos.kracart.utility.JsonUtils;
-import org.kratos.kracart.vo.NewsletterVO;
+import org.kratos.kracart.vo.newsletters.NewsletterVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;

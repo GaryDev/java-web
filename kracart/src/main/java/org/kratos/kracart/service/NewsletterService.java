@@ -6,8 +6,8 @@ import java.util.ResourceBundle;
 import org.kratos.kracart.entity.Customer;
 import org.kratos.kracart.entity.Newsletter;
 import org.kratos.kracart.vo.BasicVO;
-import org.kratos.kracart.vo.NewsletterLogVO;
-import org.kratos.kracart.vo.NewsletterVO;
+import org.kratos.kracart.vo.newsletters.NewsletterLogVO;
+import org.kratos.kracart.vo.newsletters.NewsletterVO;
 
 public interface NewsletterService {
 	
