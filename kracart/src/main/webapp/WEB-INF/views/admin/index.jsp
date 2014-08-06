@@ -24,7 +24,7 @@
     Toc.CONF = {
       TEMPLATE: 'default',
       CONN_URL: '${ctx}/admin/index',
-      LOAD_URL: '${ctx}/admin/index/load-module-view',
+      LOAD_URL: '${ctx}/admin/ajax/index/load-module-view',
       PDF_URL: '${ctx}/pdf',
       GRID_PAGE_SIZE : <c:out value="${pageSize}" escapeXml="false"></c:out>,
       GRID_STEPS : <c:out value="${steps}" escapeXml="false"></c:out>,
@@ -72,4 +72,4 @@
   <script type="text/javascript" src="${ctx}/templates/base/web/javascript/desktop/ux/notification.js"></script>
 
    <!-- GNERATING TOC DESKTOP -->
-  <script type="text/javascript" src="${ctx}/admin/index/desktop"></script>
+  <script type="text/javascript" src="${ctx}//admin/ajax/index/desktop"></script>

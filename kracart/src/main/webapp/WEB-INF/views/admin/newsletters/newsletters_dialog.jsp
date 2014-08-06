@@ -46,7 +46,7 @@ Ext.define('Toc.newsletters.NewslettersDialog', {
       this.frmNewsletter.form.baseParams['newsletterId'] = this.newsletterId;
       
       this.frmNewsletter.load({
-        url: '${ctx}/admin/newsletters/load-newsletter',
+        url: '${ctx}/admin/ajax/newsletters/load-newsletter',
         success: function(form, action) {
           Toc.newsletters.NewslettersDialog.superclass.show.call(this);
         },
@@ -69,7 +69,7 @@ Ext.define('Toc.newsletters.NewslettersDialog', {
       pageSize: Toc.CONF.GRID_PAGE_SIZE,
       proxy: {
         type: 'ajax',
-        url : '${ctx}/admin/newsletters/get-modules',
+        url : '${ctx}/admin/ajax/newsletters/get-modules',
         reader: {
           type: 'json',
           root: Toc.CONF.JSON_READER_ROOT,
@@ -80,7 +80,7 @@ Ext.define('Toc.newsletters.NewslettersDialog', {
     });
     
     this.frmNewsletter = Ext.create('Ext.form.Panel', {
-      url: '${ctx}/admin/newsletters/save-newsletter',
+      url: '${ctx}/admin/ajax/newsletters/save-newsletter',
       baseParams: {},
       border: false,
       bodyPadding: 10,

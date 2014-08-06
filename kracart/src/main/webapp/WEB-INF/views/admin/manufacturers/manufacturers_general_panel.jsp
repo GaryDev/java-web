@@ -22,13 +22,13 @@ Ext.define('Toc.manufacturers.GeneralPanel', {
   buildForm: function() {
     var items = [];
     
-    items.push({xtype: 'textfield', fieldLabel: '<spring:message code="field_name"></spring:message>', name: 'manufacturerName', allowBlank: false});
+    items.push({xtype: 'textfield', fieldLabel: '<spring:message code="field_name"></spring:message>', name: 'general.manufacturerName', allowBlank: false});
     items.push({xtype: 'panel', id: 'manufactuerer_image_panel', border: false, html: ''});
-    items.push({xtype: 'fileuploadfield', fieldLabel: '<spring:message code="field_image"></spring:message>', name: 'manufacturerImage'});
+    items.push({xtype: 'fileuploadfield', fieldLabel: '<spring:message code="field_image"></spring:message>', name: 'general.manufacturerImage'});
     
     <c:forEach items="${langs}" var="l" varStatus="s">
     	this.lang<c:out value="${l.id}" escapeXml="false"></c:out> = Ext.create('Ext.form.TextField', {
-    		name: 'manufacturerUrl',
+    		name: 'general.manufacturerUrl[<c:out value="${l.id}" escapeXml="false"></c:out>]',
     		<c:choose>
     			<c:when test="${s.index == 0}">
     				fieldLabel: '<spring:message code="field_url"></spring:message>',

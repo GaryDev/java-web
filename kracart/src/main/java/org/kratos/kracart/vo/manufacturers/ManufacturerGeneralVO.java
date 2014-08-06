@@ -1,6 +1,6 @@
 package org.kratos.kracart.vo.manufacturers;
 
-import java.util.List;
+import java.util.Map;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -8,7 +8,7 @@ public class ManufacturerGeneralVO {
 	
 	private String manufacturerName;
 	private MultipartFile manufacturerImage;
-	private List<String> manufacturerUrl;
+	private Map<Integer, String> manufacturerUrl;
 	
 	public String getManufacturerName() {
 		return manufacturerName;
@@ -22,11 +22,10 @@ public class ManufacturerGeneralVO {
 	public void setManufacturerImage(MultipartFile manufacturerImage) {
 		this.manufacturerImage = manufacturerImage;
 	}
-	public List<String> getManufacturerUrl() {
+	public Map<Integer, String> getManufacturerUrl() {
 		return manufacturerUrl;
 	}
-	public void setManufacturerUrl(List<String> manufacturerUrl) {
+	public void setManufacturerUrl(Map<Integer, String> manufacturerUrl) {
 		this.manufacturerUrl = manufacturerUrl;
 	}
-
 }

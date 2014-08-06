@@ -31,14 +31,14 @@ Ext.define('Toc.manufacturers.MetaInfoPanel', {
             border: false,
             bodyPadding: 8,
 			items: [
-	            {xtype: 'textfield', fieldLabel: '<spring:message code="field_page_title"></spring:message>' , name: 'pageTitle'},
-	            {xtype: 'textarea', fieldLabel: '<spring:message code="field_meta_keywords"></spring:message>', name: 'metaKeywords'},
-	            {xtype: 'textarea', fieldLabel: '<spring:message code="field_meta_description"></spring:message>', name: 'metaDescription'},
+	            {xtype: 'textfield', fieldLabel: '<spring:message code="field_page_title"></spring:message>' , name: 'meta[<c:out value="${l.id}" escapeXml="false"></c:out>].pageTitle'},
+	            {xtype: 'textarea', fieldLabel: '<spring:message code="field_meta_keywords"></spring:message>', name: 'meta[<c:out value="${l.id}" escapeXml="false"></c:out>].metaKeywords'},
+	            {xtype: 'textarea', fieldLabel: '<spring:message code="field_meta_description"></spring:message>', name: 'meta[<c:out value="${l.id}" escapeXml="false"></c:out>].metaDescription'},
 	            {
 	              xtype: 'textfield',
 	              fieldLabel: '<spring:message code="field_manufacturer_url"></spring:message>',
 	              labelStyle: '<c:out value="${l.worldFlagUrl}" escapeXml="false"></c:out>',
-	              name: 'manufacturerFriendlyUrl'
+	              name: 'meta[<c:out value="${l.id}" escapeXml="false"></c:out>].manufacturerFriendlyUrl'
 	            }
           	]
     	});

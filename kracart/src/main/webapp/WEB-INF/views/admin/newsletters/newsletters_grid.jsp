@@ -25,7 +25,7 @@ Ext.define('Toc.newsletters.NewslettersGrid', {
       pageSize: Toc.CONF.GRID_PAGE_SIZE,
       proxy: {
         type: 'ajax',
-        url : '${ctx}/admin/newsletters/list-newsletters',
+        url : '${ctx}/admin/ajax/newsletters/list-newsletters',
         reader: {
           type: 'json',
           root: Toc.CONF.JSON_READER_ROOT,
@@ -133,7 +133,7 @@ Ext.define('Toc.newsletters.NewslettersGrid', {
         if (btn == 'yes') {
           Ext.Ajax.request({
             waitMsg: TocLanguage.formSubmitWaitMsg,
-            url: '${ctx}/admin/newsletters/delete-newsletter',
+            url: '${ctx}/admin/ajax/newsletters/delete-newsletter',
             params: {
               newsletterId: newsletterId
             },
@@ -173,7 +173,7 @@ Ext.define('Toc.newsletters.NewslettersGrid', {
           if (btn == 'yes') {
             Ext.Ajax.request({
               waitMsg: TocLanguage.formSubmitWaitMsg,
-              url: '${ctx}/admin/newsletters/delete-newsletters',
+              url: '${ctx}/admin/ajax/newsletters/delete-newsletters',
               params: {
                 batch: batch
               },

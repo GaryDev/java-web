@@ -48,7 +48,7 @@ Ext.define('Toc.newsletters.LogDialog', {
       pageSize: Toc.CONF.GRID_PAGE_SIZE,
       proxy: {
         type: 'ajax',
-        url : '${ctx}/admin/newsletters/list-log',
+        url : '${ctx}/admin/ajax/newsletters/list-log',
         reader: {
           type: 'json',
           root: Toc.CONF.JSON_READER_ROOT,

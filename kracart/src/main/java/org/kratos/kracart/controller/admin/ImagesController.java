@@ -22,7 +22,7 @@ public class ImagesController extends CommonController {
 	@Autowired
 	private ImageService imageService;
 	
-	@RequestMapping("/admin/images/list-images")
+	@RequestMapping("/admin/ajax/images/list-images")
 	@ResponseBody
 	public Map<String, Object> listImages(HttpServletRequest request) {
 		Map<String, Object> response = new HashMap<String, Object>();
@@ -31,17 +31,16 @@ public class ImagesController extends CommonController {
 		return response;
 	}
 	
-	@RequestMapping("/admin/images/check-images")
+	@RequestMapping("/admin/ajax/images/check-images")
 	@ResponseBody
 	public Map<String, Object> checkImages(HttpServletRequest request) {
-		String root = getServletContext(request).getRealPath("/");
 		int languageId = getCurrentLanguage(request).getId();
 		Map<String, Object> response = new HashMap<String, Object>();
-		response.put(DesktopConstant.EXT_JSON_READER_ROOT, imageService.countImages(root, languageId));
+		response.put(DesktopConstant.EXT_JSON_READER_ROOT, imageService.countImages(getRootPath(request), languageId));
 		return response;
 	}
 	
-	@RequestMapping("/admin/images/get-imagegroups")
+	@RequestMapping("/admin/ajax/images/get-imagegroups")
 	@ResponseBody
 	public Map<String, Object> getImageGroups(HttpServletRequest request) {
 		int languageId = getCurrentLanguage(request).getId();
@@ -50,13 +49,12 @@ public class ImagesController extends CommonController {
 		return response;
 	}
 	
-	@RequestMapping("/admin/images/list-imagesresize-result")
+	@RequestMapping("/admin/ajax/images/list-imagesresize-result")
 	@ResponseBody
 	public List<ImageCounterVO> listImageResizeResult(String groups, String overwrite, HttpServletRequest request) {
 		List<String> groupList = JsonUtils.convertJsonStringToList(groups);
-		String root = getServletContext(request).getRealPath("/");
 		int languageId = getCurrentLanguage(request).getId();
-		List<ImageCounterVO> response = imageService.resizeImages(groupList, "1".equals(overwrite), root, languageId);
+		List<ImageCounterVO> response = imageService.resizeImages(groupList, "1".equals(overwrite), getRootPath(request), languageId);
 		return response;
 	}
 }

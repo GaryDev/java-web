@@ -31,4 +31,39 @@
 		 where manufacturers_id = #{id}
 	</select>
 	
+	<insert id="insertManufacturer" parameterType="Manufacturer"
+		keyColumn="manufacturers_id" keyProperty="id" useGeneratedKeys="true">
+		insert into toc_manufacturers (manufacturers_name, manufacturers_image, date_added, last_modified)
+		values (#{name}, #{image}, #{dateAdded}, #{dateUpdated})
+	</insert>
+	
+	<insert id="insertManufacturerInfo" parameterType="ManufacturerInfo">
+		insert into toc_manufacturers_info (manufacturers_id, languages_id, manufacturers_url, 
+			manufacturers_friendly_url, manufacturers_page_title, manufacturers_meta_keywords, manufacturers_meta_description)
+		values (#{id}, #{languageId}, #{url}, #{friendlyUrl}, #{pageTitle}, #{metaKeywords}, #{metaDescription})
+	</insert>
+	
+	<update id="updateManufacturer" parameterType="Manufacturer">
+		update toc_manufacturers
+		<trim prefix="set" suffixOverrides=",">
+		   	<if test="name != null">manufacturers_name = #{name},</if>
+		   	<if test="manufacturers_image != null">manufacturers_image = #{image},</if>
+		   	<if test="last_modified != null">last_modified = #{dateUpdated}</if>
+		 </trim>
+		 where manufacturers_id = #{id}
+	</update>
+	
+	<update id="updateManufacturerInfo" parameterType="ManufacturerInfo">
+		update toc_manufacturers_info
+		<trim prefix="set" suffixOverrides=",">
+		   	<if test="url != null">manufacturers_url = #{url},</if>
+		   	<if test="friendlyUrl != null">manufacturers_friendly_url = #{friendlyUrl},</if>
+		   	<if test="pageTitle != null">manufacturers_page_title = #{pageTitle},</if>
+		   	<if test="metaKeywords != null">manufacturers_meta_keywords = #{metaKeywords},</if>
+		   	<if test="metaDescription != null">manufacturers_meta_description = #{metaDescription}</if>
+		 </trim>
+		 where manufacturers_id = #{id}
+		   and languages_id = #{languageId}
+	</update>
+	
 </mapper>

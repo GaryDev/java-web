@@ -52,7 +52,7 @@ Ext.define('Toc.administrators.AdministratorsDialog', {
       this.frmAdministrator.form.baseParams['aID'] = administratorsId;
       
       this.frmAdministrator.load({
-        url : '${ctx}/admin/administrators/load-administrator',
+        url : '${ctx}/admin/ajax/administrators/load-administrator',
         success: function(form, action) {
           Toc.administrators.AdministratorsDialog.superclass.show.call(this);
         },
@@ -68,7 +68,7 @@ Ext.define('Toc.administrators.AdministratorsDialog', {
   
   buildForm: function() {
     this.frmAdministrator = Ext.create('Ext.form.Panel', {
-      url : '${ctx}/admin/administrators/save-administrator',
+      url : '${ctx}/admin/ajax/administrators/save-administrator',
       baseParams: {},
       border: false,
       layout: 'border',
@@ -143,7 +143,7 @@ Ext.define('Toc.administrators.AdministratorsDialog', {
     var dsAccessTree = Ext.create('Ext.data.TreeStore', {
       proxy: {
         type: 'ajax',
-        url : '${ctx}/admin/administrators/get-accesses',
+        url : '${ctx}/admin/ajax/administrators/get-accesses',
         extraParams: extraParams
       },
       root: {

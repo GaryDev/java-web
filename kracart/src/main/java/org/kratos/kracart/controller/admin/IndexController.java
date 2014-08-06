@@ -50,7 +50,7 @@ public class IndexController extends CommonController {
 		return new ModelAndView("admin/index", data);
 	}
 	
-	@RequestMapping("/admin/index/desktop")
+	@RequestMapping("/admin/ajax/index/desktop")
 	public ModelAndView desktop(HttpServletRequest request) {
 		Administrator admin = new Administrator();
 		admin.setName("admin");	// TODO: From session
@@ -72,7 +72,7 @@ public class IndexController extends CommonController {
 		return new ModelAndView("admin/desktop", data);
 	}
 	
-	@RequestMapping("/admin/index/load-module-view/{module}")
+	@RequestMapping("/admin/ajax/index/load-module-view/{module}")
 	public ModelAndView loadModuleView(@PathVariable String module) {
 		String[] tmp = module.split("-");
 		module = tmp[0];

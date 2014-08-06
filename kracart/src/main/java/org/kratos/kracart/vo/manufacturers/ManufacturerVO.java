@@ -1,28 +1,39 @@
 package org.kratos.kracart.vo.manufacturers;
 
+import java.util.Map;
+
 public class ManufacturerVO {
 	
-	private int manufacturerId;
-	private String manufacturerName;
-	private int urlClicked;
+	private Integer manufacturerId;
+	private ManufacturerGeneralVO general;
+	private Map<Integer, ManufacturerMetaVO> meta;
 	
-	public int getManufacturerId() {
+	private String imagePath;
+	
+	public Integer getManufacturerId() {
 		return manufacturerId;
 	}
-	public void setManufacturerId(int manufacturerId) {
+	public void setManufacturerId(Integer manufacturerId) {
 		this.manufacturerId = manufacturerId;
 	}
-	public String getManufacturerName() {
-		return manufacturerName;
+	public ManufacturerGeneralVO getGeneral() {
+		return general;
 	}
-	public void setManufacturerName(String manufacturerName) {
-		this.manufacturerName = manufacturerName;
+	public void setGeneral(ManufacturerGeneralVO general) {
+		this.general = general;
 	}
-	public int getUrlClicked() {
-		return urlClicked;
+	public Map<Integer, ManufacturerMetaVO> getMeta() {
+		return meta;
 	}
-	public void setUrlClicked(int urlClicked) {
-		this.urlClicked = urlClicked;
+	public void setMeta(Map<Integer, ManufacturerMetaVO> meta) {
+		this.meta = meta;
+	}
+	
+	public String getImagePath() {
+		return imagePath;
+	}
+	public void setImagePath(String imagePath) {
+		this.imagePath = imagePath;
 	}
 
 }

@@ -1,16 +1,26 @@
 package org.kratos.kracart.service.impl;
 
+import java.io.File;
+import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
 import org.kratos.kracart.entity.Manufacturer;
+import org.kratos.kracart.entity.ManufacturerInfo;
 import org.kratos.kracart.model.ManufacturerModel;
 import org.kratos.kracart.service.ManufacturerService;
+import org.kratos.kracart.vo.manufacturers.ManufacturerGridVO;
+import org.kratos.kracart.vo.manufacturers.ManufacturerMetaVO;
 import org.kratos.kracart.vo.manufacturers.ManufacturerVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service("manufacturerService")
 public class ManufacturerServiceImpl implements ManufacturerService {
@@ -19,15 +29,15 @@ public class ManufacturerServiceImpl implements ManufacturerService {
 	private ManufacturerModel manufacturerModel;
 
 	@Override
-	public List<ManufacturerVO> getManufacturers(String start, String limit) {
-		List<ManufacturerVO> manufacturers = new ArrayList<ManufacturerVO>();
+	public List<ManufacturerGridVO> getManufacturers(String start, String limit) {
+		List<ManufacturerGridVO> manufacturers = new ArrayList<ManufacturerGridVO>();
 		Map<String, Object> criteria = new HashMap<String, Object>();
 		criteria.put("start", start == null ? null : Integer.parseInt(start));
 		criteria.put("limit", limit == null ? null : Integer.parseInt(limit));
 		List<Manufacturer> manufacturerList = manufacturerModel.getManufacturers(criteria);
 		if(manufacturerList != null && manufacturerList.size() > 0) {
 			for (Manufacturer manufacturer : manufacturerList) {
-				ManufacturerVO record = new ManufacturerVO();
+				ManufacturerGridVO record = new ManufacturerGridVO();
 				record.setManufacturerId(manufacturer.getId());
 				record.setManufacturerName(manufacturer.getName());
 				record.setUrlClicked(manufacturerModel.getSumClicks(manufacturer.getId()));
@@ -40,6 +50,53 @@ public class ManufacturerServiceImpl implements ManufacturerService {
 	@Override
 	public int getTotal() {
 		return getManufacturers(null, null).size();
+	}
+
+	@Override
+	public boolean saveManufacturer(ManufacturerVO data) {
+		MultipartFile image = data.getGeneral().getManufacturerImage();
+		String imageName = null;
+		if(!image.isEmpty()) {
+			imageName = image.getOriginalFilename();
+			try {
+				FileUtils.copyInputStreamToFile(image.getInputStream(), new File(data.getImagePath(), imageName));
+			} catch (IOException e) {
+				return false;
+			}
+		}
+		Timestamp current = new Timestamp(new Date().getTime());
+		Manufacturer newManufacturer = new Manufacturer();
+		newManufacturer.setName(data.getGeneral().getManufacturerName());
+		if(StringUtils.hasLength(imageName)) {
+			newManufacturer.setImage(imageName);
+		}
+		newManufacturer.setDateUpdated(current);
+		Integer id = data.getManufacturerId();
+		if(id == null || id.intValue() == 0) {
+			newManufacturer.setDateAdded(current);
+			manufacturerModel.insertManufacturer(newManufacturer);
+		} else {
+			newManufacturer.setId(id);
+			manufacturerModel.updateManufacturer(newManufacturer);
+		}
+		Map<Integer, ManufacturerMetaVO> metaInfo = data.getMeta();
+		for (Integer languageId : metaInfo.keySet()) {
+			ManufacturerMetaVO item = metaInfo.get(languageId);
+			ManufacturerInfo newManufacturerInfo = new ManufacturerInfo();
+			newManufacturerInfo.setId(newManufacturer.getId());
+			newManufacturerInfo.setLanguageId(languageId);
+			newManufacturerInfo.setUrl(data.getGeneral().getManufacturerUrl().get(languageId));
+			newManufacturerInfo.setFriendlyUrl(item.getManufacturerFriendlyUrl());
+			newManufacturerInfo.setPageTitle(item.getPageTitle());
+			newManufacturerInfo.setMetaKeywords(item.getMetaKeywords());
+			newManufacturerInfo.setMetaDescription(item.getMetaDescription());
+			if(id == null || id.intValue() == 0) {
+				manufacturerModel.insertManufacturerInfo(newManufacturerInfo);
+			} else {
+				manufacturerModel.updateManufacturerInfo(newManufacturerInfo);
+			}
+		}
+		return true;
 	}
 
 }

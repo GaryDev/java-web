@@ -21,7 +21,7 @@ Ext.define('Toc.images.ImagesGrid', {
       pageSize: Toc.CONF.GRID_PAGE_SIZE,
       proxy: {
         type: 'ajax',
-        url : '${ctx}/admin/images/list-images',
+        url : '${ctx}/admin/ajax/images/list-images',
         reader: {
           type: 'json',
           root: Toc.CONF.JSON_READER_ROOT,

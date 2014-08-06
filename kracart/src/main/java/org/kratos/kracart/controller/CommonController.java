@@ -49,5 +49,13 @@ public class CommonController {
 	protected Language getCurrentLanguage(HttpServletRequest request) {
 		return (Language) request.getAttribute("lang");
 	}
+	
+	protected String getWebPath(HttpServletRequest request, String path) {
+		return getServletContext(request).getRealPath(path);
+	}
+	
+	protected String getRootPath(HttpServletRequest request) {
+		return getWebPath(request, "/");
+	}
 
 }

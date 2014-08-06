@@ -189,7 +189,7 @@
         Ext.get('x-login-panel').mask('<spring:message code="ms_sending_email"></spring:message>'); 
         
         Ext.Ajax.request({
-          url: '${ctx}/admin/login/get-password',
+          url: '${ctx}/admin/ajax/login/get-password',
           params: {
             emailAddress: email
           },

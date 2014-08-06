@@ -27,7 +27,7 @@ public class NewslettersController extends CommonController {
 	@Autowired
 	private NewsletterService newsletterService;
 	
-	@RequestMapping("/admin/newsletters/list-newsletters")
+	@RequestMapping("/admin/ajax/newsletters/list-newsletters")
 	@ResponseBody
 	public Map<String, Object> listNewsletters(
 			@RequestParam(defaultValue="", required=false) String start, 
@@ -42,7 +42,7 @@ public class NewslettersController extends CommonController {
 		return response;
 	}
 	
-	@RequestMapping("/admin/newsletters/list-log")
+	@RequestMapping("/admin/ajax/newsletters/list-log")
 	@ResponseBody
 	public Map<String, Object> listNewsletterLogs(
 			@RequestParam(defaultValue="", required=false) String start, 
@@ -59,7 +59,7 @@ public class NewslettersController extends CommonController {
 		return response;
 	}
 	
-	@RequestMapping("/admin/newsletters/get-modules")
+	@RequestMapping("/admin/ajax/newsletters/get-modules")
 	@ResponseBody
 	public Map<String, Object> getModules(HttpServletRequest request) {
 		Map<String, Object> response = new HashMap<String, Object>();
@@ -68,7 +68,7 @@ public class NewslettersController extends CommonController {
 		return response;
 	}
 	
-	@RequestMapping("/admin/newsletters/save-newsletter")
+	@RequestMapping("/admin/ajax/newsletters/save-newsletter")
 	@ResponseBody
 	public Map<String, Object> saveNewsletter(NewsletterVO data, HttpServletRequest request) {
 		boolean success = newsletterService.saveNewsletter(data);
@@ -79,7 +79,7 @@ public class NewslettersController extends CommonController {
 		return response;
 	}
 	
-	@RequestMapping("/admin/newsletters/load-newsletter")
+	@RequestMapping("/admin/ajax/newsletters/load-newsletter")
 	@ResponseBody
 	public Map<String, Object> loadNewsletter(String newsletterId, HttpServletRequest request) {
 		int id = StringUtils.hasLength(newsletterId) ? Integer.parseInt(newsletterId) : 0;
@@ -91,13 +91,13 @@ public class NewslettersController extends CommonController {
 		return response;
 	}
 	
-	@RequestMapping("/admin/newsletters/delete-newsletter")
+	@RequestMapping("/admin/ajax/newsletters/delete-newsletter")
 	@ResponseBody
 	public Map<String, Object> delete(String newsletterId, HttpServletRequest request) {
 		return deleteNewsletterById(newsletterId, false, request);
 	}
 	
-	@RequestMapping("/admin/newsletters/delete-newsletters")
+	@RequestMapping("/admin/ajax/newsletters/delete-newsletters")
 	@ResponseBody
 	public Map<String, Object> deleteMultiple(String batch, HttpServletRequest request) {
 		return deleteNewsletterById(batch, true, request);
@@ -114,7 +114,7 @@ public class NewslettersController extends CommonController {
 		return response;
 	}
 	
-	@RequestMapping("/admin/newsletters/get-newsletters-confirmation")
+	@RequestMapping("/admin/ajax/newsletters/get-newsletters-confirmation")
 	@ResponseBody
 	public Map<String, Object> getNewslettersConfirmation(String newsletterId, HttpServletRequest request) {
 		int id = StringUtils.hasLength(newsletterId) ? Integer.parseInt(newsletterId) : 0;
@@ -129,7 +129,7 @@ public class NewslettersController extends CommonController {
 		return response;
 	}
 	
-	@RequestMapping("/admin/newsletters/get-emails-confirmation")
+	@RequestMapping("/admin/ajax/newsletters/get-emails-confirmation")
 	@ResponseBody
 	public Map<String, Object> getEmailsConfirmation(String newsletterId, String batch, HttpServletRequest request) {
 		int id = StringUtils.hasLength(newsletterId) ? Integer.parseInt(newsletterId) : 0;
@@ -147,7 +147,7 @@ public class NewslettersController extends CommonController {
 		return response;
 	}
 	
-	@RequestMapping("/admin/newsletters/get-emails-audience")
+	@RequestMapping("/admin/ajax/newsletters/get-emails-audience")
 	@ResponseBody
 	public Map<String, Object> getEmailsAudience(HttpServletRequest request) {
 		Map<String, Object> response = new HashMap<String, Object>();
@@ -156,13 +156,13 @@ public class NewslettersController extends CommonController {
 		return response;
 	}
 	
-	@RequestMapping("/admin/newsletters/send-newsletters")
+	@RequestMapping("/admin/ajax/newsletters/send-newsletters")
 	@ResponseBody
 	public Map<String, Object> sendNewsletters(String newsletterId, HttpServletRequest request) {
 		return sendAction(newsletterId, null, request);
 	}
 	
-	@RequestMapping("/admin/newsletters/send-emails")
+	@RequestMapping("/admin/ajax/newsletters/send-emails")
 	@ResponseBody
 	public Map<String, Object> sendEmails(String newsletterId, String batch, HttpServletRequest request) {
 		return sendAction(newsletterId, batch, request);

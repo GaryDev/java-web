@@ -45,7 +45,7 @@ Ext.define('Toc.newsletters.SendNewslettersDialog', {
     this.newsletterId = newsletterId;
     
     Ext.Ajax.request({
-      url: '${ctx}/admin/newsletters/get-newsletters-confirmation',
+      url: '${ctx}/admin/ajax/newsletters/get-newsletters-confirmation',
       params: {
         newsletterId: this.newsletterId
       },
@@ -76,7 +76,7 @@ Ext.define('Toc.newsletters.SendNewslettersDialog', {
     this.frmNewsletter.el.mask('<spring:message code="sending_please_wait"></spring:message>', 'x-mask-loading');
     
     Ext.Ajax.request({
-      url: '${ctx}/admin/newsletters/send-newsletters',
+      url: '${ctx}/admin/ajax/newsletters/send-newsletters',
       params: {
         newsletterId: this.newsletterId
       },

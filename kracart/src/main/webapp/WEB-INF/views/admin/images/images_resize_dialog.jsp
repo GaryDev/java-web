@@ -50,7 +50,7 @@ Ext.define('Toc.images.ImagesResizeDialog', {
       pageSize: Toc.CONF.GRID_PAGE_SIZE,
       proxy: {
         type: 'ajax',
-        url : '${ctx}/admin/images/get-imagegroups',
+        url : '${ctx}/admin/ajax/images/get-imagegroups',
         reader: {
           type: 'json',
           root: Toc.CONF.JSON_READER_ROOT,
@@ -106,7 +106,7 @@ Ext.define('Toc.images.ImagesResizeDialog', {
         pageSize: Toc.CONF.GRID_PAGE_SIZE,
         proxy: {
           type: 'ajax',
-          url : '${ctx}/admin/images/list-imagesresize-result',
+          url : '${ctx}/admin/ajax/images/list-imagesresize-result',
           timeout: 600000,
           extraParams: {
             overwrite: overwrite,

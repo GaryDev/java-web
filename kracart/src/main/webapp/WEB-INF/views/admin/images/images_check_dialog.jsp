@@ -42,7 +42,7 @@ Ext.define('Toc.images.ImagesCheckDialog', {
         pageSize: Toc.CONF.GRID_PAGE_SIZE,
         proxy: {
           type: 'ajax',
-          url : '${ctx}/admin/images/check-images',
+          url : '${ctx}/admin/ajax/images/check-images',
           reader: {
             type: 'json',
             root: Toc.CONF.JSON_READER_ROOT,

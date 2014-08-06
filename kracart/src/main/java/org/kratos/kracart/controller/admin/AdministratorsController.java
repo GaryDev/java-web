@@ -31,7 +31,7 @@ public class AdministratorsController extends CommonController {
 	@Autowired
 	private AdminAccessService adminAccessService;
 	
-	@RequestMapping("/admin/administrators/list-administrators")
+	@RequestMapping("/admin/ajax/administrators/list-administrators")
 	@ResponseBody
 	public Map<String, Object> listAdministrators(
 				@RequestParam(defaultValue="", required=false) String start, 
@@ -46,7 +46,7 @@ public class AdministratorsController extends CommonController {
 		return response;
 	}
 	
-	@RequestMapping("/admin/administrators/get-accesses")
+	@RequestMapping("/admin/ajax/administrators/get-accesses")
 	@ResponseBody
 	public List<AdminModuleParent> getAccesses(
 				@RequestParam(defaultValue="", required=false) String aID, 
@@ -65,7 +65,7 @@ public class AdministratorsController extends CommonController {
 		return response;
 	}
 	
-	@RequestMapping("/admin/administrators/load-administrator")
+	@RequestMapping("/admin/ajax/administrators/load-administrator")
 	@ResponseBody
 	public Map<String, Object> loadAdminstrator(@RequestParam String aID) {
 		int id = StringUtils.hasLength(aID) ? Integer.parseInt(aID) : 0;
@@ -76,7 +76,7 @@ public class AdministratorsController extends CommonController {
 		return response;
 	}
 	
-	@RequestMapping("/admin/administrators/save-administrator")
+	@RequestMapping("/admin/ajax/administrators/save-administrator")
 	@ResponseBody
 	public Map<String, Object> save(AdministratorVO voAdmin, HttpServletRequest request) {
 		String feedback = "";
@@ -105,13 +105,13 @@ public class AdministratorsController extends CommonController {
 		return response;
 	}
 	
-	@RequestMapping("/admin/administrators/delete-administrator")
+	@RequestMapping("/admin/ajax/administrators/delete-administrator")
 	@ResponseBody
 	public Map<String, Object> delete(String adminId, HttpServletRequest request) {
 		return deleteAdministratorById(adminId, false, request);
 	}
 	
-	@RequestMapping("/admin/administrators/delete-administrators")
+	@RequestMapping("/admin/ajax/administrators/delete-administrators")
 	@ResponseBody
 	public Map<String, Object> deleteMultiple(String batch, HttpServletRequest request) {
 		return deleteAdministratorById(batch, true, request);

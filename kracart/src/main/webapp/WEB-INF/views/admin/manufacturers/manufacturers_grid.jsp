@@ -18,7 +18,7 @@ Ext.define('Toc.manufacturers.ManufacturersGrid', {
       pageSize: Toc.CONF.GRID_PAGE_SIZE,
       proxy: {
         type: 'ajax',
-        url : '${ctx}/admin/manufacturers/list-manufacturers',
+        url : '${ctx}/admin/ajax/manufacturers/list-manufacturers',
         reader: {
           type: 'json',
           root: Toc.CONF.JSON_READER_ROOT,
@@ -104,7 +104,7 @@ Ext.define('Toc.manufacturers.ManufacturersGrid', {
         if (btn == 'yes') {
           Ext.Ajax.request({
             waitMsg: TocLanguage.formSubmitWaitMsg,
-            url : '${ctx}/admin/manufacturers/delete-manufacturer',
+            url : '${ctx}/admin/ajax/manufacturers/delete-manufacturer',
             params: {
               manufacturerId: manufacturersId
             },
@@ -144,7 +144,7 @@ Ext.define('Toc.manufacturers.ManufacturersGrid', {
           if (btn == 'yes') {
             Ext.Ajax.request({
               waitMsg: TocLanguage.formSubmitWaitMsg,
-              url : '${ctx}/admin/manufacturers/delete-manufacturers',
+              url : '${ctx}/admin/ajax/manufacturers/delete-manufacturers',
               params: {
                 batch: batch
               },

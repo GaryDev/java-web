@@ -31,7 +31,7 @@ public class LoginController extends CommonController {
 		
 	}
 	
-	@RequestMapping("/admin/login/get-password")
+	@RequestMapping("/admin/ajax/login/get-password")
 	@ResponseBody
 	public Map<String, Object> getPassword(@RequestParam String emailAddress, HttpServletRequest request) {
 		boolean error = false;

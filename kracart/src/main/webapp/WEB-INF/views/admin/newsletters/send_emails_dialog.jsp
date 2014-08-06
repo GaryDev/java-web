@@ -61,7 +61,7 @@ Ext.define('Toc.newsletters.SendEmailsDialog', {
     this.pnlSendEmail.el.mask('<spring:message code="sending_please_wait"></spring:message>', 'x-mask-loading');
     
     Ext.Ajax.request({
-      url: '${ctx}/admin/newsletters/send-emails',
+      url: '${ctx}/admin/ajax/newsletters/send-emails',
       params: {
         newsletterId: this.newsletterId,
         batch: batch
@@ -93,7 +93,7 @@ Ext.define('Toc.newsletters.SendEmailsDialog', {
     this.pnlSendEmail.el.mask(TocLanguage.formSubmitWaitMsg, 'x-mask-loading');
     
     Ext.Ajax.request({
-      url: '${ctx}/admin/newsletters/get-emails-confirmation',
+      url: '${ctx}/admin/ajax/newsletters/get-emails-confirmation',
       params: {
         newsletterId: this.newsletterId,
         batch: batch
@@ -125,7 +125,7 @@ Ext.define('Toc.newsletters.SendEmailsDialog', {
       pageSize: Toc.CONF.GRID_PAGE_SIZE,
       proxy: {
         type: 'ajax',
-        url : '${ctx}/admin/newsletters/get-emails-audience',
+        url : '${ctx}/admin/ajax/newsletters/get-emails-audience',
         reader: {
           type: 'json',
           root: Toc.CONF.JSON_READER_ROOT,

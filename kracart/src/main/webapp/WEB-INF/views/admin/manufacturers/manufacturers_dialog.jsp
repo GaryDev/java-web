@@ -49,7 +49,7 @@ Ext.define('Toc.manufacturers.ManufacturersDialog', {
       this.frmManufacturer.baseParams['manufacturerId'] = manufacturersId;
       
       this.frmManufacturer.load({
-        url : '${ctx}/admin/manufacturers/load-manufacturer',
+        url : '${ctx}/admin/ajax/manufacturers/load-manufacturer',
         success: function(form, action) {
           var imgHtml = action.result.data.manufacturerImage;
           
@@ -96,7 +96,7 @@ Ext.define('Toc.manufacturers.ManufacturersDialog', {
         labelWidth: 100,
         anchor: '97%'
       },
-      url : '${ctx}/admin/manufacturers/save-manufacturer',
+      url : '${ctx}/admin/ajax/manufacturers/save-manufacturer',
       baseParams: {},
       items: tabManufacturers
     });

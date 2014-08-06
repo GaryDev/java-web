@@ -9,9 +9,11 @@ import org.kratos.kracart.controller.CommonController;
 import org.kratos.kracart.core.config.ConfigConstant;
 import org.kratos.kracart.core.config.DesktopConstant;
 import org.kratos.kracart.service.ManufacturerService;
-import org.kratos.kracart.vo.manufacturers.ManufacturerGeneralVO;
-import org.kratos.kracart.vo.manufacturers.ManufacturerMetaVO;
+import org.kratos.kracart.vo.manufacturers.ManufacturerVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,7 +27,7 @@ public class ManufacturersController extends CommonController {
 	@Autowired
 	private ManufacturerService manufacturerService;
 
-	@RequestMapping("/admin/manufacturers/list-manufacturers")
+	@RequestMapping("/admin/ajax/manufacturers/list-manufacturers")
 	@ResponseBody
 	public Map<String, Object> listManufacturers(
 			@RequestParam(defaultValue="", required=false) String start, 
@@ -39,17 +41,18 @@ public class ManufacturersController extends CommonController {
 		return response;
 	}
 	
-	@RequestMapping(value = "/admin/manufacturers/save-manufacturer", method = RequestMethod.POST)
-	@ResponseBody
-	public Map<String, Object> saveManufacturer(
-			ManufacturerGeneralVO general, 
-			ManufacturerMetaVO meta, HttpServletRequest request) {
-		boolean success = true;
+	@RequestMapping(value = "/admin/ajax/manufacturers/save-manufacturer", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> saveManufacturer(
+			ManufacturerVO data, HttpServletRequest request) {
+		data.setImagePath(getWebPath(request, "/assets/images/manufacturers"));
+		boolean success = manufacturerService.saveManufacturer(data);
 		String feedback = success ? getMessage(request, "ms_success_action_performed") : getMessage(request, "ms_error_action_not_performed");
-		Map<String, Object> response = new HashMap<String, Object>();
-		response.put("success", success);
-		response.put("feedback", feedback);
-		return response;
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("success", success);
+		result.put("feedback", feedback);
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-Type", "text/html;charset=UTF-8");
+		return new ResponseEntity<Map<String, Object>>(result, headers, HttpStatus.OK);
 	}
 	
 }

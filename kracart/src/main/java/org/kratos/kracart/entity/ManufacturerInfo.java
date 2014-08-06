@@ -8,6 +8,7 @@ public class ManufacturerInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private int id;
+	private int languageId;
 	private String url;
 	private String friendlyUrl;
 	private String pageTitle;
@@ -21,6 +22,12 @@ public class ManufacturerInfo implements Serializable {
 	}
 	public void setId(int id) {
 		this.id = id;
+	}
+	public int getLanguageId() {
+		return languageId;
+	}
+	public void setLanguageId(int languageId) {
+		this.languageId = languageId;
 	}
 	public String getUrl() {
 		return url;

@@ -22,7 +22,7 @@ Ext.define('Toc.administrators.AdministratorsGrid', {
       pageSize: Toc.CONF.GRID_PAGE_SIZE,
       proxy: {
         type: 'ajax',
-        url : '${ctx}/admin/administrators/list-administrators',
+        url : '${ctx}/admin/ajax/administrators/list-administrators',
         reader: {
           type: 'json',
           root: Toc.CONF.JSON_READER_ROOT,
@@ -108,7 +108,7 @@ Ext.define('Toc.administrators.AdministratorsGrid', {
         if (btn == 'yes') {
           Ext.Ajax.request({
             waitMsg: TocLanguage.formSubmitWaitMsg,
-            url : '${ctx}/admin/administrators/delete-administrator',
+            url : '${ctx}/admin/ajax/administrators/delete-administrator',
             params: {
               adminId: administratorsId
             },
@@ -148,7 +148,7 @@ Ext.define('Toc.administrators.AdministratorsGrid', {
           if (btn == 'yes') {
             Ext.Ajax.request({
               waitMsg: TocLanguage.formSubmitWaitMsg,
-              url : '${ctx}/admin/administrators/delete-administrators',
+              url : '${ctx}/admin/ajax/administrators/delete-administrators',
               params: {
                 batch: batch
               },
