@@ -1,7 +1,11 @@
 package org.kratos.kracart.service.impl;
 
+import java.beans.BeanInfo;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,6 +18,7 @@ import org.kratos.kracart.entity.Manufacturer;
 import org.kratos.kracart.entity.ManufacturerInfo;
 import org.kratos.kracart.model.ManufacturerModel;
 import org.kratos.kracart.service.ManufacturerService;
+import org.kratos.kracart.vo.manufacturers.ManufacturerGeneralVO;
 import org.kratos.kracart.vo.manufacturers.ManufacturerGridVO;
 import org.kratos.kracart.vo.manufacturers.ManufacturerMetaVO;
 import org.kratos.kracart.vo.manufacturers.ManufacturerVO;
@@ -97,6 +102,118 @@ public class ManufacturerServiceImpl implements ManufacturerService {
 			}
 		}
 		return true;
+	}
+	
+	@Override
+	public Map<String, Object> loadManufacturer(int manufacturerId) {
+		ManufacturerVO manufacturer = getManufacturer(manufacturerId);
+		return convertManufacturerBean(manufacturer);
+	}
+
+	private ManufacturerVO getManufacturer(int manufacturerId) {
+		ManufacturerVO data = new ManufacturerVO();
+		Manufacturer manufacturer = manufacturerModel.getManufacturerData(manufacturerId);
+		data.setManufacturerId(manufacturer.getId());
+		data.setManufacturerImage(manufacturer.getImage());
+		ManufacturerGeneralVO general = new ManufacturerGeneralVO();
+		general.setManufacturerName(manufacturer.getName());
+		Map<Integer, String> manufacturerUrl = new HashMap<Integer, String>();
+		Map<Integer, ManufacturerMetaVO> metaInfo = new HashMap<Integer, ManufacturerMetaVO>();
+		List<ManufacturerInfo> manufacturerInfo = manufacturer.getInfos();
+		if(manufacturerInfo != null && manufacturerInfo.size() > 0) {
+			for (ManufacturerInfo info : manufacturerInfo) {
+				manufacturerUrl.put(info.getLanguageId(), info.getUrl());
+				ManufacturerMetaVO meta = new ManufacturerMetaVO();
+				meta.setManufacturerFriendlyUrl(info.getFriendlyUrl());
+				meta.setMetaDescription(info.getMetaDescription());
+				meta.setMetaKeywords(info.getMetaKeywords());
+				meta.setPageTitle(info.getPageTitle());
+				metaInfo.put(info.getLanguageId(), meta);
+			}
+		}
+		general.setManufacturerUrl(manufacturerUrl);
+		data.setGeneral(general);
+		data.setMeta(metaInfo);
+		return data;
+	}
+	
+	private Map<String, Object> convertManufacturerBean(ManufacturerVO source) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+			BeanInfo beanInfo = Introspector.getBeanInfo(source.getClass());  
+	        PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();  
+	        for (PropertyDescriptor property : propertyDescriptors) {  
+	            String key = property.getName();  
+	            if (key.equals("class")) {  
+	            	continue;
+	            }
+	            Method getter = property.getReadMethod();  
+	            Object value = getter.invoke(source);
+	            if(value instanceof String || value instanceof Integer) {
+	            	map.put(key, value);
+	            } else {
+	            	if("general".equals(key)) {
+	            		map.putAll(convertManufacturerBean(((ManufacturerGeneralVO) value)));
+	            	} else if("meta".equals(key)) {
+	            		Map meta = (Map) value;
+	            		for (Object index : meta.keySet()) {
+	            			String metaKey = "meta[" + index + "]";
+	            			map.putAll(convertManufacturerBean(metaKey, (ManufacturerMetaVO) meta.get(index)));
+	            		}
+	            	}
+	            }
+	        }
+		} catch(Exception e) {
+			
+		}
+		return map;
+	}
+	
+	private Map<String, Object> convertManufacturerBean(ManufacturerGeneralVO source) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+			BeanInfo beanInfo = Introspector.getBeanInfo(source.getClass());  
+	        PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();  
+	        for (PropertyDescriptor property : propertyDescriptors) {  
+	            String key = property.getName();  
+	            if (key.equals("class")) {  
+	            	continue;
+	            }
+	            Method getter = property.getReadMethod();  
+	            Object value = getter.invoke(source);
+	            if(value instanceof String) {
+	            	map.put("general." + key, value);
+	            } else if(value instanceof Map) {
+	            	Map url = (Map) value;
+	            	for (Object index : url.keySet()) {
+	            		map.put("general." + key + "[" + index + "]", url.get(index));
+					}
+	            }
+	        }
+		} catch(Exception e) {
+			
+		}
+		return map;
+	}
+	
+	private Map<String, Object> convertManufacturerBean(String metaKey, ManufacturerMetaVO source) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+			BeanInfo beanInfo = Introspector.getBeanInfo(source.getClass());  
+	        PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();  
+	        for (PropertyDescriptor property : propertyDescriptors) {  
+	            String key = property.getName();  
+	            if (key.equals("class")) {  
+	            	continue;
+	            }
+	            Method getter = property.getReadMethod();  
+	            Object value = getter.invoke(source);
+	            map.put(metaKey + "." + key, value);
+	        }
+		} catch(Exception e) {
+			
+		}
+		return map;
 	}
 
 }

@@ -51,7 +51,8 @@ Ext.define('Toc.manufacturers.ManufacturersDialog', {
       this.frmManufacturer.load({
         url : '${ctx}/admin/ajax/manufacturers/load-manufacturer',
         success: function(form, action) {
-          var imgHtml = action.result.data.manufacturerImage;
+          var img = action.result.data.manufacturerImage;
+          var imgHtml = '<img src ="${ctx}/assets/images/manufacturers/' + img + '"  style = "margin-left: 110px; width: 80px; height: 80px" /><br/><span style = "padding-left: 110px;">/assets/images/manufacturers/' + img + '</span>';
           
           if (imgHtml) {
             this.pnlGeneral.getComponent('manufactuerer_image_panel').update(imgHtml);

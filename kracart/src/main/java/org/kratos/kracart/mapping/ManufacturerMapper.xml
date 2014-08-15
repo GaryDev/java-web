@@ -11,6 +11,22 @@
 		<result property="dateAdded" column="date_added" />
 		<result property="dateUpdated" column="last_modified" />
 	</resultMap>
+	<resultMap type="Manufacturer" id="rmManufacturerData">
+		<id property="id" column="manufacturers_id" />
+		<result property="name" column="manufacturers_name" />
+		<result property="image" column="manufacturers_image" />
+		<result property="dateAdded" column="date_added" />
+		<result property="dateUpdated" column="last_modified" />
+		<collection property="infos" ofType="ManufacturerInfo" column="manufacturers_id">
+			<result property="languageId" column="languages_id" />
+			<result property="url" column="manufacturers_url" />
+			<result property="friendlyUrl" column="manufacturers_friendly_url" />
+			<result property="pageTitle" column="manufacturers_page_title" />
+			<result property="metaKeywords" column="manufacturers_meta_keywords" />
+			<result property="metaDescription" column="manufacturers_meta_description" />
+		</collection>
+	</resultMap>
+	
 	
 	<sql id="selectManufacturer">
 		select manufacturers_id, manufacturers_name, manufacturers_image, date_added, last_modified
@@ -23,6 +39,13 @@
 		 <if test="start != null and limit != null">
 		 	limit #{start}, #{limit}
 		 </if>
+	</select>
+	
+	<select id="getManufacturerData" parameterType="int" resultMap="rmManufacturerData">
+		select m.*, mi.*
+		  from toc_manufacturers m
+		 inner join toc_manufacturers_info mi on m.manufacturers_id = mi.manufacturers_id
+		where m.manufacturers_id = #{id}
 	</select>
 	
 	<select id="getSumClicks" parameterType="int" resultType="int">

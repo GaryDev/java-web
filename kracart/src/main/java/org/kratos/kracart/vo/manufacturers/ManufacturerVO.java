@@ -5,6 +5,7 @@ import java.util.Map;
 public class ManufacturerVO {
 	
 	private Integer manufacturerId;
+	private String manufacturerImage;
 	private ManufacturerGeneralVO general;
 	private Map<Integer, ManufacturerMetaVO> meta;
 	
@@ -12,6 +13,12 @@ public class ManufacturerVO {
 	
 	public Integer getManufacturerId() {
 		return manufacturerId;
+	}
+	public String getManufacturerImage() {
+		return manufacturerImage;
+	}
+	public void setManufacturerImage(String manufacturerImage) {
+		this.manufacturerImage = manufacturerImage;
 	}
 	public void setManufacturerId(Integer manufacturerId) {
 		this.manufacturerId = manufacturerId;

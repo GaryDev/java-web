@@ -55,4 +55,16 @@ public class ManufacturersController extends CommonController {
 		return new ResponseEntity<Map<String, Object>>(result, headers, HttpStatus.OK);
 	}
 	
+	@RequestMapping("/admin/ajax/manufacturers/load-manufacturer")
+	@ResponseBody
+	public Map<String, Object> loadManufacturer(String manufacturerId, HttpServletRequest request) {
+		int id = StringUtils.hasLength(manufacturerId) ? Integer.parseInt(manufacturerId) : 0;
+		Map<String, Object> data = manufacturerService.loadManufacturer(id);
+		boolean success = (data != null);
+		Map<String, Object> response = new HashMap<String, Object>();
+		response.put("success", success);
+		response.put("data", data);
+		return response;
+	}
+	
 }

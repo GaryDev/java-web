@@ -2,6 +2,7 @@ package org.kratos.kracart.entity;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.List;
 
 public class Manufacturer implements Serializable {
 	
@@ -12,6 +13,7 @@ public class Manufacturer implements Serializable {
 	private String image;
 	private Timestamp dateAdded;
 	private Timestamp dateUpdated;
+	private List<ManufacturerInfo> infos;
 	
 	public int getId() {
 		return id;
@@ -42,6 +44,12 @@ public class Manufacturer implements Serializable {
 	}
 	public void setDateUpdated(Timestamp dateUpdated) {
 		this.dateUpdated = dateUpdated;
+	}
+	public List<ManufacturerInfo> getInfos() {
+		return infos;
+	}
+	public void setInfos(List<ManufacturerInfo> infos) {
+		this.infos = infos;
 	}
 
 }
