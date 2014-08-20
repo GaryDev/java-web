@@ -70,8 +70,8 @@
 		update toc_manufacturers
 		<trim prefix="set" suffixOverrides=",">
 		   	<if test="name != null">manufacturers_name = #{name},</if>
-		   	<if test="manufacturers_image != null">manufacturers_image = #{image},</if>
-		   	<if test="last_modified != null">last_modified = #{dateUpdated}</if>
+		   	<if test="image != null">manufacturers_image = #{image},</if>
+		   	<if test="dateUpdated != null">last_modified = #{dateUpdated}</if>
 		 </trim>
 		 where manufacturers_id = #{id}
 	</update>
@@ -88,5 +88,17 @@
 		 where manufacturers_id = #{id}
 		   and languages_id = #{languageId}
 	</update>
+	
+	<delete id="deleteManufacturer" parameterType="int">
+		delete
+		  from toc_manufacturers
+		 where manufacturers_id = #{id}
+	</delete>
+	
+	<delete id="deleteManufacturerInfo" parameterType="int">
+		delete
+		  from toc_manufacturers_info
+		 where manufacturers_id = #{id}
+	</delete>
 	
 </mapper>

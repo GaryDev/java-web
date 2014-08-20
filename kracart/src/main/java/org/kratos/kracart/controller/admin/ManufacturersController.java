@@ -9,6 +9,7 @@ import org.kratos.kracart.controller.CommonController;
 import org.kratos.kracart.core.config.ConfigConstant;
 import org.kratos.kracart.core.config.DesktopConstant;
 import org.kratos.kracart.service.ManufacturerService;
+import org.kratos.kracart.utility.JsonUtils;
 import org.kratos.kracart.vo.manufacturers.ManufacturerVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -64,6 +65,29 @@ public class ManufacturersController extends CommonController {
 		Map<String, Object> response = new HashMap<String, Object>();
 		response.put("success", success);
 		response.put("data", data);
+		return response;
+	}
+	
+	@RequestMapping("/admin/ajax/manufacturers/delete-manufacturer")
+	@ResponseBody
+	public Map<String, Object> delete(String manufacturerId, HttpServletRequest request) {
+		return deleteManufacturerById(manufacturerId, false, request);
+	}
+	
+	@RequestMapping("/admin/ajax/manufacturers/delete-manufacturers")
+	@ResponseBody
+	public Map<String, Object> deleteMultiple(String batch, HttpServletRequest request) {
+		return deleteManufacturerById(batch, true, request);
+	}
+	
+	private Map<String, Object> deleteManufacturerById(String id, boolean isJson, HttpServletRequest request) {
+		String[] idArray = isJson ? JsonUtils.convertJsonStringToList(id).toArray(new String[0]) : new String[] {id};
+		int result = manufacturerService.deleteManufacturer(idArray);
+		boolean success = (result == 1);
+		String feedback = success ? getMessage(request, "ms_success_action_performed") : getMessage(request, "ms_error_action_not_performed");
+		Map<String, Object> response = new HashMap<String, Object>();
+		response.put("success", success);
+		response.put("feedback", feedback);
 		return response;
 	}
 	

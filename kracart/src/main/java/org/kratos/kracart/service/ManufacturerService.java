@@ -11,7 +11,7 @@ public interface ManufacturerService {
 	public List<ManufacturerGridVO> getManufacturers(String start, String limit);
 	public int getTotal();
 	public boolean saveManufacturer(ManufacturerVO data);
+	public int deleteManufacturer(String[] idArray);
 	public Map<String, Object> loadManufacturer(int manufacturerId);
-	
 
 }

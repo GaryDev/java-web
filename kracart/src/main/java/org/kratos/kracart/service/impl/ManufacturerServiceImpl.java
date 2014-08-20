@@ -105,6 +105,19 @@ public class ManufacturerServiceImpl implements ManufacturerService {
 	}
 	
 	@Override
+	public int deleteManufacturer(String[] idArray) {
+		if(idArray != null && idArray.length > 0) {
+			for (String element : idArray) {
+				int id = Integer.parseInt(element);
+				manufacturerModel.deleteManufacturer(id);
+				manufacturerModel.deleteManufacturerInfo(id);
+			}
+			return 1;
+		}
+		return 0;
+	}
+	
+	@Override
 	public Map<String, Object> loadManufacturer(int manufacturerId) {
 		ManufacturerVO manufacturer = getManufacturer(manufacturerId);
 		return convertManufacturerBean(manufacturer);
@@ -215,5 +228,4 @@ public class ManufacturerServiceImpl implements ManufacturerService {
 		}
 		return map;
 	}
-
 }

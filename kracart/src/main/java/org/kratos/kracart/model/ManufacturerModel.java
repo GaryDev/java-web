@@ -15,4 +15,6 @@ public interface ManufacturerModel {
 	public void insertManufacturerInfo(ManufacturerInfo data);
 	public void updateManufacturer(Manufacturer data);
 	public void updateManufacturerInfo(ManufacturerInfo data);
+	public void deleteManufacturer(int manufacturerId);
+	public void deleteManufacturerInfo(int manufacturerId);
 }
