@@ -165,7 +165,7 @@ public class ManufacturerServiceImpl implements ManufacturerService {
 	            if(value instanceof String || value instanceof Integer) {
 	            	map.put(key, value);
 	            } else {
-	            	if("general".equals(key)) {
+	            	if(value instanceof ManufacturerGeneralVO) {
 	            		map.putAll(convertManufacturerBean(((ManufacturerGeneralVO) value)));
 	            	} else if("meta".equals(key)) {
 	            		Map meta = (Map) value;

@@ -27,6 +27,7 @@
 				<value>/lang/login/messages</value>
 				<value>/lang/manufacturers/messages</value>
 				<value>/lang/newsletters/messages</value>
+				<value>/lang/product-variants/messages</value>
 			</list>
 		</property>
 		<property name="useCodeAsDefaultMessage" value="true" />

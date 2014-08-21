@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.kratos.kracart.model.ProductVariantModel">
+	
+	<resultMap type="ProductVariant" id="rmVariantGroup">
+		<id property="id" column="products_variants_groups_id" />
+		<result property="name" column="products_variants_groups_name" />
+	</resultMap>
+	<resultMap type="ProductVariant" id="rmVariantEntry">
+		<id property="id" column="products_variants_values_id" />
+		<result property="name" column="products_variants_values_name" />
+	</resultMap>
+	
+	<select id="getVariantGroups" parameterType="map" resultMap="rmVariantGroup">
+		select products_variants_groups_id, products_variants_groups_name
+		  from toc_products_variants_groups
+		 where language_id = #{langId}
+		 order by products_variants_groups_name
+		 <if test="start != null and limit != null">
+		 	limit #{start}, #{limit}
+		 </if>
+	</select>
+	<select id="getVariantEntries" parameterType="map" resultMap="rmVariantEntry">
+		select pvv.products_variants_values_id, pvv.products_variants_values_name
+		  from toc_products_variants_values pvv
+		 inner join toc_products_variants_values_to_products_variants_groups pvv2pvg
+		    on pvv2pvg.products_variants_values_id = pvv.products_variants_values_id 
+		 where pvv2pvg.products_variants_groups_id = #{groupsId}
+		   and pvv.language_id = #{langId}
+		 order by pvv.products_variants_values_name
+	</select>
+	
+	<select id="getTotalEntries" parameterType="int" resultType="int">
+		select count(*) as cnt
+		  from toc_products_variants_values_to_products_variants_groups
+		 where products_variants_groups_id = #{id}
+	</select>
+	
+</mapper>
