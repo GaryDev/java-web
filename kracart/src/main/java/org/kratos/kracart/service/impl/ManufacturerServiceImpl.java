@@ -1,11 +1,7 @@
 package org.kratos.kracart.service.impl;
 
-import java.beans.BeanInfo;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,6 +14,7 @@ import org.kratos.kracart.entity.Manufacturer;
 import org.kratos.kracart.entity.ManufacturerInfo;
 import org.kratos.kracart.model.ManufacturerModel;
 import org.kratos.kracart.service.ManufacturerService;
+import org.kratos.kracart.utility.CommonUtils;
 import org.kratos.kracart.vo.manufacturers.ManufacturerGeneralVO;
 import org.kratos.kracart.vo.manufacturers.ManufacturerGridVO;
 import org.kratos.kracart.vo.manufacturers.ManufacturerMetaVO;
@@ -120,7 +117,7 @@ public class ManufacturerServiceImpl implements ManufacturerService {
 	@Override
 	public Map<String, Object> loadManufacturer(int manufacturerId) {
 		ManufacturerVO manufacturer = getManufacturer(manufacturerId);
-		return convertManufacturerBean(manufacturer);
+		return CommonUtils.beanToMap(new HashMap<String, Object>(), manufacturer);
 	}
 
 	private ManufacturerVO getManufacturer(int manufacturerId) {
@@ -148,84 +145,5 @@ public class ManufacturerServiceImpl implements ManufacturerService {
 		data.setGeneral(general);
 		data.setMeta(metaInfo);
 		return data;
-	}
-	
-	private Map<String, Object> convertManufacturerBean(ManufacturerVO source) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		try {
-			BeanInfo beanInfo = Introspector.getBeanInfo(source.getClass());  
-	        PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();  
-	        for (PropertyDescriptor property : propertyDescriptors) {  
-	            String key = property.getName();  
-	            if (key.equals("class")) {  
-	            	continue;
-	            }
-	            Method getter = property.getReadMethod();  
-	            Object value = getter.invoke(source);
-	            if(value instanceof String || value instanceof Integer) {
-	            	map.put(key, value);
-	            } else {
-	            	if(value instanceof ManufacturerGeneralVO) {
-	            		map.putAll(convertManufacturerBean(((ManufacturerGeneralVO) value)));
-	            	} else if("meta".equals(key)) {
-	            		Map meta = (Map) value;
-	            		for (Object index : meta.keySet()) {
-	            			String metaKey = "meta[" + index + "]";
-	            			map.putAll(convertManufacturerBean(metaKey, (ManufacturerMetaVO) meta.get(index)));
-	            		}
-	            	}
-	            }
-	        }
-		} catch(Exception e) {
-			
-		}
-		return map;
-	}
-	
-	private Map<String, Object> convertManufacturerBean(ManufacturerGeneralVO source) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		try {
-			BeanInfo beanInfo = Introspector.getBeanInfo(source.getClass());  
-	        PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();  
-	        for (PropertyDescriptor property : propertyDescriptors) {  
-	            String key = property.getName();  
-	            if (key.equals("class")) {  
-	            	continue;
-	            }
-	            Method getter = property.getReadMethod();  
-	            Object value = getter.invoke(source);
-	            if(value instanceof String) {
-	            	map.put("general." + key, value);
-	            } else if(value instanceof Map) {
-	            	Map url = (Map) value;
-	            	for (Object index : url.keySet()) {
-	            		map.put("general." + key + "[" + index + "]", url.get(index));
-					}
-	            }
-	        }
-		} catch(Exception e) {
-			
-		}
-		return map;
-	}
-	
-	private Map<String, Object> convertManufacturerBean(String metaKey, ManufacturerMetaVO source) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		try {
-			BeanInfo beanInfo = Introspector.getBeanInfo(source.getClass());  
-	        PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();  
-	        for (PropertyDescriptor property : propertyDescriptors) {  
-	            String key = property.getName();  
-	            if (key.equals("class")) {  
-	            	continue;
-	            }
-	            Method getter = property.getReadMethod();  
-	            Object value = getter.invoke(source);
-	            map.put(metaKey + "." + key, value);
-	        }
-		} catch(Exception e) {
-			
-		}
-		return map;
 	}
 }

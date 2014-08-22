@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import org.kratos.kracart.core.annotation.JsonFlatter;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 
@@ -104,20 +105,45 @@ public abstract class CommonUtils {
 	}
 	
 	public static Map<String, Object> beanToMap(Map<String, Object> map, Object source) {
+		return beanToMap(map, source, null);
+	}
+	
+	public static Map<String, Object> beanToMap(Map<String, Object> map, Object source, Integer index) {
 		if(source == null || map == null) {
 			return null;
 		}
         try {  
+        	String flatterKey = null;
+        	if(source.getClass().isAnnotationPresent(JsonFlatter.class)) {
+        		JsonFlatter flatter = source.getClass().getAnnotation(JsonFlatter.class);
+        		flatterKey = flatter.value();
+        		if(index != null) {
+        			flatterKey = flatterKey + "[" + index + "]";
+        		}
+        	}
             BeanInfo beanInfo = Introspector.getBeanInfo(source.getClass());  
             PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();  
             for (PropertyDescriptor property : propertyDescriptors) {  
                 String key = property.getName();  
-                if (!key.equals("class")) {  
+                if (!key.equals("class")) {
+                	if(StringUtils.hasLength(flatterKey)) {
+                		key = flatterKey + "." + key;
+                	}
                     Method getter = property.getReadMethod();  
                     Object value = getter.invoke(source);
                     if(value != null) {
 	                    if(value instanceof String || value instanceof Integer || value instanceof Boolean) {
-	                    	map.put(key, value);  
+	                    	map.put(key, value);
+	                    } else if(value instanceof Map) {
+	                    	Map mapper = (Map) value;
+	                    	for (Object k : mapper.keySet()) {
+	                    		Object item = mapper.get(k);
+	                    		if(item instanceof String || item instanceof Integer || item instanceof Boolean) {
+	                    			map.put(key + "[" + k + "]", item);
+	                    		} else if(k instanceof Integer) {
+		                    		beanToMap(map, item, (Integer) k);
+	                    		}
+							}
 	                    } else {
 	                    	beanToMap(map, value);
 	                    }

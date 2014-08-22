@@ -2,8 +2,10 @@ package org.kratos.kracart.vo.manufacturers;
 
 import java.util.Map;
 
+import org.kratos.kracart.core.annotation.JsonFlatter;
 import org.springframework.web.multipart.MultipartFile;
 
+@JsonFlatter("general")
 public class ManufacturerGeneralVO {
 	
 	private String manufacturerName;

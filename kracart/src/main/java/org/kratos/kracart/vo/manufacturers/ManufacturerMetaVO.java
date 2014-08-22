@@ -1,5 +1,8 @@
 package org.kratos.kracart.vo.manufacturers;
 
+import org.kratos.kracart.core.annotation.JsonFlatter;
+
+@JsonFlatter("meta")
 public class ManufacturerMetaVO {
 	
 	private String pageTitle;

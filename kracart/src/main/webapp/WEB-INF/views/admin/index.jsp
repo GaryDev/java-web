@@ -72,4 +72,4 @@
   <script type="text/javascript" src="${ctx}/templates/base/web/javascript/desktop/ux/notification.js"></script>
 
    <!-- GNERATING TOC DESKTOP -->
-  <script type="text/javascript" src="${ctx}//admin/ajax/index/desktop"></script>
+  <script type="text/javascript" src="${ctx}/admin/ajax/index/desktop"></script>
