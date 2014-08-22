@@ -6,10 +6,12 @@
 	
 	<resultMap type="ProductVariant" id="rmVariantGroup">
 		<id property="id" column="products_variants_groups_id" />
+		<result property="languageId" column="language_id" />
 		<result property="name" column="products_variants_groups_name" />
 	</resultMap>
 	<resultMap type="ProductVariant" id="rmVariantEntry">
 		<id property="id" column="products_variants_values_id" />
+		<result property="languageId" column="language_id" />
 		<result property="name" column="products_variants_values_name" />
 	</resultMap>
 	
@@ -31,11 +33,20 @@
 		   and pvv.language_id = #{langId}
 		 order by pvv.products_variants_values_name
 	</select>
-	
 	<select id="getTotalEntries" parameterType="int" resultType="int">
 		select count(*) as cnt
 		  from toc_products_variants_values_to_products_variants_groups
 		 where products_variants_groups_id = #{id}
+	</select>
+	<select id="getVariantGroup" parameterType="int" resultMap="rmVariantGroup">
+		select products_variants_groups_id, language_id, products_variants_groups_name
+		  from toc_products_variants_groups
+		 where products_variants_groups_id = #{id}
+	</select>
+	<select id="getVariantValue" parameterType="int" resultMap="rmVariantEntry">
+		select products_variants_values_id, language_id, products_variants_values_name
+		  from toc_products_variants_values
+		 where products_variants_values_id = #{id}
 	</select>
 	
 </mapper>

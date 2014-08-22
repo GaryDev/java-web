@@ -1,11 +1,9 @@
 package org.kratos.kracart.vo.productVariants;
 
-import java.util.Map;
-
-public class VariantsEntriesVO {
+public class VariantsEntriesGridVO {
 	
 	private int valuesId;
-	private Map<Integer, String> valuesName;
+	private String valuesName;
 	
 	public int getValuesId() {
 		return valuesId;
@@ -13,11 +11,11 @@ public class VariantsEntriesVO {
 	public void setValuesId(int valuesId) {
 		this.valuesId = valuesId;
 	}
-	public Map<Integer, String> getValuesName() {
+	public String getValuesName() {
 		return valuesName;
 	}
-	public void setValuesName(Map<Integer, String> valuesName) {
+	public void setValuesName(String valuesName) {
 		this.valuesName = valuesName;
 	}
-	
+
 }

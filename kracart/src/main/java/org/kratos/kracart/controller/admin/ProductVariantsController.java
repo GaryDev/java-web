@@ -47,4 +47,28 @@ public class ProductVariantsController extends CommonController {
 		return response;
 	}
 	
+	@RequestMapping("/admin/ajax/product-variants/load-product-variant")
+	@ResponseBody
+	public Map<String, Object> loadProductVariant(String groupsId, HttpServletRequest request) {
+		int id = StringUtils.hasLength(groupsId) ? Integer.parseInt(groupsId) : 0;
+		Map<String, Object> data = productVariantService.loadProductVariant(id);
+		boolean success = (data != null);
+		Map<String, Object> response = new HashMap<String, Object>();
+		response.put("success", success);
+		response.put("data", data);
+		return response;
+	}
+	
+	@RequestMapping("/admin/ajax/product-variants/load-product-variants-entry")
+	@ResponseBody
+	public Map<String, Object> loadProductVariantEntry(String valuesId, HttpServletRequest request) {
+		int id = StringUtils.hasLength(valuesId) ? Integer.parseInt(valuesId) : 0;
+		Map<String, Object> data = productVariantService.loadProductEntry(id);
+		boolean success = (data != null);
+		Map<String, Object> response = new HashMap<String, Object>();
+		response.put("success", success);
+		response.put("data", data);
+		return response;
+	}
+	
 }

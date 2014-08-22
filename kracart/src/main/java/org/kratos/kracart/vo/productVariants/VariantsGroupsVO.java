@@ -1,10 +1,11 @@
 package org.kratos.kracart.vo.productVariants;
 
+import java.util.Map;
+
 public class VariantsGroupsVO {
 	
 	private int groupsId;
-	private String groupsName;
-	private int totalEntries;
+	private Map<Integer, String> groupsName;
 	
 	public int getGroupsId() {
 		return groupsId;
@@ -12,17 +13,10 @@ public class VariantsGroupsVO {
 	public void setGroupsId(int groupsId) {
 		this.groupsId = groupsId;
 	}
-	public String getGroupsName() {
+	public Map<Integer, String> getGroupsName() {
 		return groupsName;
 	}
-	public void setGroupsName(String groupsName) {
+	public void setGroupsName(Map<Integer, String> groupsName) {
 		this.groupsName = groupsName;
 	}
-	public int getTotalEntries() {
-		return totalEntries;
-	}
-	public void setTotalEntries(int totalEntries) {
-		this.totalEntries = totalEntries;
-	}
-
 }

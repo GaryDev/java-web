@@ -63,15 +63,15 @@ Ext.override(Toc.desktop.ProductVariantsWindow, {
   
   onEditVariantsGroups: function(grdGroups, record) {
     var dlg = this.createProductVariantsGroupsDialog();
-    dlg.setTitle(record.get('products_variants_groups_name'));
+    dlg.setTitle(record.get('groupsName'));
     
     this.onSaveSuccess(dlg, grdGroups);
     
-    dlg.show(record.get('products_variants_groups_id'));
+    dlg.show(record.get('groupsId'));
   },
   
   onEditVariantsEntries: function(grdEntries, record) {
-    var variantsValuesId = record.get('products_variants_values_id');
+    var variantsValuesId = record.get('valuesId');
     var dlg = this.createProductVariantsEntriesDialog();
     
     dlg.setTitle(grdEntries.variantsGroupsName);

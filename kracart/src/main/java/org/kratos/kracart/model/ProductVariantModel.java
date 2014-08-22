@@ -10,5 +10,6 @@ public interface ProductVariantModel {
 	public List<ProductVariant> getVariantGroups(Map<String, Object> criteria);
 	public int getTotalEntries(int groupsId);
 	public List<ProductVariant> getVariantEntries(Map<String, Object> criteria);
-
+	public List<ProductVariant> getVariantGroup(int groupsId);
+	public List<ProductVariant> getVariantValue(int valuesId);
 }
