@@ -163,7 +163,7 @@ public class DesktopServiceImpl implements DesktopService {
 		if(!wallpapers.containsKey(code)) {
 			return null;
 		}
-		return getWallPapers().get(code);
+		return wallpapers.get(code);
 	}
 	
 	private Map<String, DesktopWallPaper> getWallPapers() {

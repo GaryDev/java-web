@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.kratos.kracart.vo.productVariants.VariantsEntriesGridVO;
+import org.kratos.kracart.vo.productVariants.VariantsEntriesVO;
 import org.kratos.kracart.vo.productVariants.VariantsGroupsGridVO;
+import org.kratos.kracart.vo.productVariants.VariantsGroupsVO;
 
 
 public interface ProductVariantService {
@@ -14,4 +16,6 @@ public interface ProductVariantService {
 	public int getTotal(int languageId);
 	public Map<String, Object> loadProductVariant(int groupsId);
 	public Map<String, Object> loadProductEntry(int valuesId);
+	public boolean saveProductVariant(VariantsGroupsVO data);
+	public boolean saveProductVariantEntry(int groupsId, VariantsEntriesVO data);
 }

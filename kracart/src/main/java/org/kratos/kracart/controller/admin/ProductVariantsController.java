@@ -9,6 +9,8 @@ import org.kratos.kracart.controller.CommonController;
 import org.kratos.kracart.core.config.ConfigConstant;
 import org.kratos.kracart.core.config.DesktopConstant;
 import org.kratos.kracart.service.ProductVariantService;
+import org.kratos.kracart.vo.productVariants.VariantsEntriesVO;
+import org.kratos.kracart.vo.productVariants.VariantsGroupsVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
@@ -68,6 +70,29 @@ public class ProductVariantsController extends CommonController {
 		Map<String, Object> response = new HashMap<String, Object>();
 		response.put("success", success);
 		response.put("data", data);
+		return response;
+	}
+	
+	@RequestMapping("/admin/ajax/product-variants/save-product-variant")
+	@ResponseBody
+	public Map<String, Object> saveProductVariant(VariantsGroupsVO data, HttpServletRequest request) {
+		boolean success = productVariantService.saveProductVariant(data);
+		String feedback = success ? getMessage(request, "ms_success_action_performed") : getMessage(request, "ms_error_action_not_performed");
+		Map<String, Object> response = new HashMap<String, Object>();
+		response.put("success", success);
+		response.put("feedback", feedback);
+		return response;
+	}
+	
+	@RequestMapping("/admin/ajax/product-variants/save-product-variants-entry")
+	@ResponseBody
+	public Map<String, Object> saveProductVariantEntry(String groupsId, VariantsEntriesVO data, HttpServletRequest request) {
+		int id = StringUtils.hasLength(groupsId) ? Integer.parseInt(groupsId) : 0;
+		boolean success = productVariantService.saveProductVariantEntry(id, data);
+		String feedback = success ? getMessage(request, "ms_success_action_performed") : getMessage(request, "ms_error_action_not_performed");
+		Map<String, Object> response = new HashMap<String, Object>();
+		response.put("success", success);
+		response.put("feedback", feedback);
 		return response;
 	}
 	

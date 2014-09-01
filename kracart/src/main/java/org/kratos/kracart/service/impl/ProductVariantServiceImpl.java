@@ -92,4 +92,52 @@ public class ProductVariantServiceImpl implements ProductVariantService {
 		return CommonUtils.beanToMap(new HashMap<String, Object>(), record);
 	}
 
+	@Override
+	public boolean saveProductVariant(VariantsGroupsVO data) {
+		int groupId = data.getGroupsId();
+		if(groupId == 0) {
+			groupId = productVariantModel.getMaxVariantGroupId();
+			groupId ++;
+		}
+		Map<Integer, String> groupNames = data.getGroupsName();
+		for (Integer languageId : groupNames.keySet()) {
+			ProductVariant pv = new ProductVariant();
+			pv.setId(groupId);
+			pv.setLanguageId(languageId);
+			pv.setName(groupNames.get(languageId));
+			if(data.getGroupsId() > 0) {
+				productVariantModel.updateVariantGroup(pv);
+			} else {
+				productVariantModel.insertVariantGroup(pv);
+			}
+		}
+		return true;
+	}
+
+	@Override
+	public boolean saveProductVariantEntry(int groupsId, VariantsEntriesVO data) {
+		int entryId = data.getValuesId();
+		if(entryId == 0) {
+			entryId = productVariantModel.getMaxVariantValueId();
+			entryId ++;
+		}
+		Map<Integer, String> valueNames = data.getValuesName();
+		for (Integer languageId : valueNames.keySet()) {
+			ProductVariant pv = new ProductVariant();
+			pv.setId(entryId);
+			pv.setLanguageId(languageId);
+			pv.setName(valueNames.get(languageId));
+			if(data.getValuesId() > 0) {
+				productVariantModel.updateVariantValue(pv);
+			} else {
+				productVariantModel.insertVariantValue(pv);
+			}
+		}
+		Map<String, Integer> relationship = new HashMap<String, Integer>();
+		relationship.put("groupsId", groupsId);
+		relationship.put("valuesId", entryId);
+		productVariantModel.insertVariantValueToGroup(relationship);
+		return true;
+	}
+
 }

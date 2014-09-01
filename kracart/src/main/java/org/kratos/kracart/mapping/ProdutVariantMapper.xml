@@ -48,5 +48,36 @@
 		  from toc_products_variants_values
 		 where products_variants_values_id = #{id}
 	</select>
-	
+	<select id="getMaxVariantGroupId" resultType="int">
+		select max(products_variants_groups_id)
+		  from toc_products_variants_groups
+	</select>
+	<insert id="insertVariantGroup" parameterType="ProductVariant">
+		insert into toc_products_variants_groups(products_variants_groups_id, language_id, products_variants_groups_name)
+		values(#{id}, #{languageId}, #{name})
+	</insert>
+	<update id="updateVariantGroup" parameterType="ProductVariant">
+		update toc_products_variants_groups
+		   set products_variants_groups_name = #{name}
+		 where products_variants_groups_id = #{id}
+		   and language_id = #{languageId}
+	</update>
+	<select id="getMaxVariantValueId" resultType="int">
+		select max(products_variants_values_id)
+		  from toc_products_variants_values
+	</select>
+	<insert id="insertVariantValue" parameterType="ProductVariant">
+		insert into toc_products_variants_values(products_variants_values_id, language_id, products_variants_values_name)
+		values(#{id}, #{languageId}, #{name})
+	</insert>
+	<update id="updateVariantValue" parameterType="ProductVariant">
+		update toc_products_variants_values
+		   set products_variants_values_name = #{name}
+		 where products_variants_values_id = #{id}
+		   and language_id = #{languageId}
+	</update>
+	<insert id="insertVariantValueToGroup" parameterType="map">
+		insert into toc_products_variants_values_to_products_variants_groups(products_variants_groups_id, products_variants_values_id)
+		values(#{groupsId}, #{valuesId})
+	</insert>
 </mapper>
