@@ -7,9 +7,11 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 import org.kratos.kracart.core.annotation.JsonFlatter;
 import org.springframework.util.DigestUtils;
@@ -68,16 +70,31 @@ public abstract class CommonUtils {
 		return str;
 	}
 	
+	public static List<String> distinctList(List<String> list) {
+		if(list == null || list.size() == 0) {
+			return null;
+		}
+		Set<String> filter = new HashSet<String>(list);
+		return new ArrayList<String>(filter);
+	}
+	
 	public static String listToString(List<String> list) {
-		return listToString(list, ",");
+		return listToString(list, ",", false);
 	}
 	
 	public static String listToString(List<String> list, String delimter) {
+		return listToString(list, delimter, false);
+	}
+	
+	public static String listToString(List<String> list, String delimter, boolean distinct) {
 		if(list == null || list.size() == 0) {
 			return "";
 		}
 		if(!StringUtils.hasLength(delimter)) {
 			delimter = ",";
+		}
+		if(distinct) {
+			list = distinctList(list);
 		}
 		StringBuilder result = new StringBuilder();
 		for (String item : list) {

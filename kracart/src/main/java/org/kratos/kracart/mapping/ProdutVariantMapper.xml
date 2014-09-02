@@ -33,8 +33,8 @@
 		   and pvv.language_id = #{langId}
 		 order by pvv.products_variants_values_name
 	</select>
-	<select id="getTotalEntries" parameterType="int" resultType="int">
-		select count(*) as cnt
+	<select id="getVariantEntriesByGroup" parameterType="int" resultType="int">
+		select products_variants_values_id
 		  from toc_products_variants_values_to_products_variants_groups
 		 where products_variants_groups_id = #{id}
 	</select>
@@ -80,4 +80,39 @@
 		insert into toc_products_variants_values_to_products_variants_groups(products_variants_groups_id, products_variants_values_id)
 		values(#{groupsId}, #{valuesId})
 	</insert>
+	<select id="getVariantValueName" parameterType="map" resultType="string">
+		select v.products_variants_values_name
+		  from toc_products_variants_entries e
+		 inner join toc_products_variants_values v 
+		    on v.products_variants_values_id = e.products_variants_values_id
+		 where v.products_variants_values_id = #{valuesId}
+   		   and v.language_id = #{languageId}
+	</select>
+	<delete id="deleteVariantValue" parameterType="int">
+		delete
+		  from toc_products_variants_values
+		 where products_variants_values_id = #{id}
+	</delete>
+	<delete id="deleteVariantValueToGroup" parameterType="map">
+		delete
+		  from toc_products_variants_values_to_products_variants_groups
+		<trim prefix="where" prefixOverrides="and">
+		  <if test="groupsId != null and groupsId > 0">
+		    and products_variants_groups_id = #{groupsId}
+		  </if>
+		  <if test="valuesId != null and valuesId > 0">
+		    and products_variants_values_id = #{valuesId}
+		  </if>
+		</trim>
+	</delete>
+	<select id="getProductVariantCount" parameterType="int" resultType="int">
+		select count(*)
+		  from toc_products_variants_entries
+		 where products_variants_groups_id = #{id}
+	</select>
+	<delete id="deleteProductVariant" parameterType="int">
+		delete
+		  from toc_products_variants_groups
+		 where products_variants_groups_id = #{id}
+	</delete>
 </mapper>

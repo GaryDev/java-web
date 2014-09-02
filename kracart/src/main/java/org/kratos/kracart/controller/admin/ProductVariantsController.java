@@ -1,6 +1,7 @@
 package org.kratos.kracart.controller.admin;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -9,6 +10,8 @@ import org.kratos.kracart.controller.CommonController;
 import org.kratos.kracart.core.config.ConfigConstant;
 import org.kratos.kracart.core.config.DesktopConstant;
 import org.kratos.kracart.service.ProductVariantService;
+import org.kratos.kracart.utility.CommonUtils;
+import org.kratos.kracart.utility.JsonUtils;
 import org.kratos.kracart.vo.productVariants.VariantsEntriesVO;
 import org.kratos.kracart.vo.productVariants.VariantsGroupsVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,12 +87,69 @@ public class ProductVariantsController extends CommonController {
 		return response;
 	}
 	
+	@RequestMapping("/admin/ajax/product-variants/delete-product-variant")
+	@ResponseBody
+	public Map<String, Object> deleteProductVariant(String groupsId, HttpServletRequest request) {
+		boolean success = true;
+		String feedback = "";
+		int gId = StringUtils.hasLength(groupsId) ? Integer.parseInt(groupsId) : 0;
+		int totalProduct = productVariantService.getProductVariantCount(gId);
+		if(totalProduct > 0) {
+			success = false;
+			feedback = getMessage(request, "delete_error_variant_group_in_use", new Object[]{ totalProduct });
+		} else {
+			success = productVariantService.deleteProductVariant(gId);
+			feedback = success ? getMessage(request, "ms_success_action_performed") : getMessage(request, "ms_error_action_not_performed");
+		}
+		Map<String, Object> response = new HashMap<String, Object>();
+		response.put("success", success);
+		response.put("feedback", feedback);
+		return response;
+	}
+	
 	@RequestMapping("/admin/ajax/product-variants/save-product-variants-entry")
 	@ResponseBody
 	public Map<String, Object> saveProductVariantEntry(String groupsId, VariantsEntriesVO data, HttpServletRequest request) {
 		int id = StringUtils.hasLength(groupsId) ? Integer.parseInt(groupsId) : 0;
 		boolean success = productVariantService.saveProductVariantEntry(id, data);
 		String feedback = success ? getMessage(request, "ms_success_action_performed") : getMessage(request, "ms_error_action_not_performed");
+		Map<String, Object> response = new HashMap<String, Object>();
+		response.put("success", success);
+		response.put("feedback", feedback);
+		return response;
+	}
+	
+	@RequestMapping("/admin/ajax/product-variants/delete-product-variants-entry")
+	@ResponseBody
+	public Map<String, Object> deleteProductVariantEntry(String groupsId, String valuesId, HttpServletRequest request) {
+		return deleteProductVariantEntryById(groupsId, valuesId, false, request);
+	}
+	
+	@RequestMapping("/admin/ajax/product-variants/delete-product-variants-entries")
+	@ResponseBody
+	public Map<String, Object> deleteProductVariantEntries(String groupsId, String batch, HttpServletRequest request) {
+		return deleteProductVariantEntryById(groupsId, batch, true, request);
+	}
+	
+	private Map<String, Object> deleteProductVariantEntryById(String groupsId, String id, boolean isJson, HttpServletRequest request) {
+		boolean success = true;
+		String feedback = "";
+		int gId = StringUtils.hasLength(groupsId) ? Integer.parseInt(groupsId) : 0;
+		String[] idArray = isJson ? JsonUtils.convertJsonStringToList(id).toArray(new String[0]) : new String[] {id};
+		int languageId = getCurrentLanguage(request).getId();
+		List<String> entryData = productVariantService.getEntryData(idArray, languageId);
+		if(entryData.size() > 0) {
+			success = false;
+			if(isJson) {
+				feedback = getMessage(request, "batch_delete_error_group_entries_in_use");
+				feedback += "<p>" + CommonUtils.listToString(entryData, ",", true) + "</p>";
+			} else {
+				feedback = getMessage(request, "delete_error_group_entry_in_use", new Object[]{ entryData.size() });
+			}
+		} else {
+			success = productVariantService.deleteProductVariantEntry(gId, idArray);
+			feedback = success ? getMessage(request, "ms_success_action_performed") : getMessage(request, "ms_error_action_not_performed");
+		}
 		Map<String, Object> response = new HashMap<String, Object>();
 		response.put("success", success);
 		response.put("feedback", feedback);

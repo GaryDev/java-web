@@ -18,4 +18,8 @@ public interface ProductVariantService {
 	public Map<String, Object> loadProductEntry(int valuesId);
 	public boolean saveProductVariant(VariantsGroupsVO data);
 	public boolean saveProductVariantEntry(int groupsId, VariantsEntriesVO data);
+	public List<String> getEntryData(String[] idArray, int languageId);
+	public boolean deleteProductVariantEntry(int groupsId, String[] idArray);
+	public int getProductVariantCount(int groupsId);
+	public boolean deleteProductVariant(int groupsId);
 }

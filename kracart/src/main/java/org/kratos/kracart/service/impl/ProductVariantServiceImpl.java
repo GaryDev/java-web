@@ -36,11 +36,16 @@ public class ProductVariantServiceImpl implements ProductVariantService {
 				VariantsGroupsGridVO record = new VariantsGroupsGridVO();
 				record.setGroupsId(group.getId());
 				record.setGroupsName(group.getName());
-				record.setTotalEntries(productVariantModel.getTotalEntries(group.getId()));
+				record.setTotalEntries(getTotalEntries(group.getId()));
 				groups.add(record);
 			}
 		}
 		return groups;
+	}
+	
+	private int getTotalEntries(int groupsId) {
+		List<Integer> valuesId = productVariantModel.getVariantEntriesByGroup(groupsId);
+		return valuesId == null ? 0 : valuesId.size();
 	}
 
 	@Override
@@ -137,6 +142,60 @@ public class ProductVariantServiceImpl implements ProductVariantService {
 		relationship.put("groupsId", groupsId);
 		relationship.put("valuesId", entryId);
 		productVariantModel.insertVariantValueToGroup(relationship);
+		return true;
+	}
+
+	@Override
+	public List<String> getEntryData(String[] idArray, int languageId) {
+		Map<String, Object> criteria = new HashMap<String, Object>();
+		criteria.put("languageId", languageId);
+		List<String> valuesName = new ArrayList<String>();
+		if(idArray != null && idArray.length > 0) {
+			for (String element : idArray) {
+				int id = Integer.parseInt(element);
+				criteria.put("valuesId", id);
+				List<String> valueName = productVariantModel.getVariantValueName(criteria);
+				if(valueName != null && valueName.size() > 0) {
+					valuesName.addAll(valueName);
+				}
+			}
+		}
+		return valuesName;
+	}
+
+	@Override
+	public boolean deleteProductVariantEntry(int groupsId, String[] idArray) {
+		if(idArray != null && idArray.length > 0) {
+			Map<String, Object> criteria = new HashMap<String, Object>();
+			criteria.put("groupsId", groupsId);
+			for (String element : idArray) {
+				int id = Integer.parseInt(element);
+				criteria.put("valuesId", id);
+				productVariantModel.deleteVariantValue(id);
+				productVariantModel.deleteVariantValueToGroup(criteria);
+			}
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public int getProductVariantCount(int groupsId) {
+		return productVariantModel.getProductVariantCount(groupsId);
+	}
+
+	@Override
+	public boolean deleteProductVariant(int groupsId) {
+		List<Integer> valuesId = productVariantModel.getVariantEntriesByGroup(groupsId);
+		if(valuesId != null && valuesId.size() > 0) {
+			for (Integer id : valuesId) {
+				productVariantModel.deleteVariantValue(id);
+			}
+		}
+		Map<String, Object> criteria = new HashMap<String, Object>();
+		criteria.put("groupsId", groupsId);
+		productVariantModel.deleteVariantValueToGroup(criteria);
+		productVariantModel.deleteProductVariant(groupsId);
 		return true;
 	}
 
